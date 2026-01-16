@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insight Details | GreenSync</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #198754;
+            --navy-blue: #0f172a;
+            --sidebar-width: 260px;
+            --bg-light: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Sidebar (เหมือนเดิม) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0; left: 0;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+        }
+
+        .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .brand-link { font-size: 1.4rem; font-weight: 700; color: var(--navy-blue); text-decoration: none; display: flex; align-items: center; }
+        .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
+        .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
+        .menu-category:first-child { margin-top: 0; }
+        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; transition: 0.3s; text-decoration: none; }
+        .nav-link i { width: 25px; font-size: 1.1rem; }
+        .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
+        .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* --- Main Content --- */
+        .main-content { margin-left: var(--sidebar-width); padding: 30px; }
+
+        /* --- Insight Card --- */
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            background: #fff5f5;
+            border-left: 4px solid #dc2626;
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .score-pill {
+            background: #dcfce7;
+            color: #166534;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand-box">
+            <a class="navbar-brand d-flex align-items-center" href="main-dashboard.html">
+                <span class="fa-stack me-2" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
+                </span>
+                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px; color: var(--navy-blue);">
+                    Green<span class="text-success">Sync</span>
+                </span>
+            </a>
+        </div>
+        
+        <div class="menu-list">
+            <div class="menu-category">ภาพรวม</div>
+            <a href="main-dashboard.html" class="nav-link active">
+                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+            </a>
+            <a href="notifications.html" class="nav-link">
+                <i class="fa-solid fa-bell"></i> การแจ้งเตือน
+            </a>
+            <div class="menu-category">Green Office</div>
+            <a href="../green-office/assessment-list.html" class="nav-link"><i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน</a>
+            <div class="menu-category">Carbon Footprint</div>
+            <a href="../carbon-footprint/data-entry.html" class="nav-link"><i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)</a>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar">JS</div>
+            <div style="flex: 1;">
+                <h6 class="mb-0 fw-bold">John Smith</h6>
+                <small class="text-muted">Eco Innovation Ltd.</small>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item active text-primary">วิเคราะห์ข้อมูล (AI Insight)</li>
+                    </ol>
+                </nav>
+                <div class="d-flex align-items-center gap-3">
+                    <h3 class="fw-bold mb-0">รายงานความผิดปกติการใช้พลังงาน</h3>
+                    <span class="score-pill"><i class="fa-solid fa-robot me-1"></i> Confidence: 92%</span>
+                </div>
+            </div>
+            <a href="main-dashboard.html" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-2"></i>กลับหน้าหลัก</a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="insight-card h-100">
+                    <div class="highlight-box">
+                        <div class="d-flex gap-3">
+                            <i class="fa-solid fa-triangle-exclamation text-danger fs-4 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold text-danger mb-1">ตรวจพบการใช้ไฟฟ้าสูงผิดปกติ (+15% จากค่าเฉลี่ย)</h6>
+                                <p class="mb-0 small text-muted">ระบบตรวจพบว่าการใช้ไฟฟ้าในโซนชั้น 2 ช่วงเวลา 12:00 - 13:00 น. ไม่ลดลงตามพฤติกรรมปกติ (ช่วงพักเที่ยง)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3">กราฟเปรียบเทียบ: ค่าเฉลี่ย 3 เดือนย้อนหลัง vs ปัจจุบัน</h6>
+                    <canvas id="anomalyChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="insight-card h-100 bg-primary bg-opacity-10 border-primary border-opacity-25">
+                    <div class="d-flex align-items-center mb-3 text-primary">
+                        <i class="fa-solid fa-magnifying-glass-chart fs-4 me-2"></i>
+                        <h5 class="fw-bold mb-0">AI Diagnosis</h5>
+                    </div>
+                    
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Suspected Source</small>
+                            <div class="fw-bold">เครื่องปรับอากาศ (AHU-02)</div>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Location</small>
+                            <div class="fw-bold">อาคาร A ชั้น 2 (ฝั่งทิศตะวันตก)</div>
+                        </li>
+                        <li class="mb-3">
+                            <small class="text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Estimated Loss</small>
+                            <div class="fw-bold text-danger">~ 450 kWh / เดือน (ประมาณ 2,250 บาท)</div>
+                        </li>
+                        <li>
+                            <small class="text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Pattern Analysis</small>
+                            <div class="small">กราฟแสดงการทำงานต่อเนื่อง (Continuous Load) แม้ไม่มีคนอยู่ในพื้นที่ คาดว่าเกิดจากไม่ได้ตั้งเวลาปิดพักเที่ยง</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="insight-card mt-4">
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-list-check text-success me-2"></i>ข้อแนะนำในการแก้ไข (Suggested Actions)</h5>
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>รายการที่ต้องทำ</th>
+                            <th>ความสำคัญ</th>
+                            <th>มอบหมายงาน</th>
+                            <th class="text-end">สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="form-check-input"></td>
+                            <td>ตรวจสอบการตั้งเวลา (Timer) ของแอร์ AHU-02</td>
+                            <td><span class="badge bg-danger">สูง</span></td>
+                            <td>
+                                <select class="form-select form-select-sm" style="width: 150px;">
+                                    <option>เลือกผู้รับผิดชอบ</option>
+                                    <option>ช่างสมศักดิ์</option>
+                                    <option>คุณวิภาดา</option>
+                                </select>
+                            </td>
+                            <td class="text-end"><button class="btn btn-sm btn-outline-primary">ส่งใบงาน</button></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="form-check-input"></td>
+                            <td>ทำความสะอาดฟิลเตอร์แอร์ (อาจอุดตันทำให้กินไฟ)</td>
+                            <td><span class="badge bg-warning text-dark">ปานกลาง</span></td>
+                            <td>
+                                <select class="form-select form-select-sm" style="width: 150px;">
+                                    <option>ช่างสมศักดิ์</option>
+                                </select>
+                            </td>
+                            <td class="text-end"><button class="btn btn-sm btn-outline-primary">ส่งใบงาน</button></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><input type="checkbox" class="form-check-input"></td>
+                            <td>รณรงค์ปิดแอร์ช่วงพักเที่ยง</td>
+                            <td><span class="badge bg-info text-dark">ต่ำ</span></td>
+                            <td>
+                                <select class="form-select form-select-sm" style="width: 150px;">
+                                    <option>HR Team</option>
+                                </select>
+                            </td>
+                            <td class="text-end"><button class="btn btn-sm btn-outline-secondary" disabled>รอดำเนินการ</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 text-end">
+                <button class="btn btn-light text-muted me-2">ไม่ใช่ความผิดปกติ (Ignore)</button>
+                <button class="btn btn-success"><i class="fa-solid fa-check me-2"></i>แก้ไขเรียบร้อยแล้ว (Resolve)</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Anomaly Chart
+        const ctx = document.getElementById('anomalyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+                datasets: [
+                    {
+                        label: 'วันนี้ (Current Usage)',
+                        data: [45, 50, 52, 53, 52, 51, 53, 54, 50, 45], // ไม่ลดลงตอนเที่ยง
+                        borderColor: '#dc2626', // สีแดง
+                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'ค่าเฉลี่ยปกติ (Baseline)',
+                        data: [40, 48, 50, 51, 20, 25, 50, 52, 48, 40], // ลดลงตอนเที่ยง
+                        borderColor: '#198754', // สีเขียว
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' kWh';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Energy (kWh)' } }
+                }
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

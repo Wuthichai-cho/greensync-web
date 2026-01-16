@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่าองค์กร | GreenSync</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #198754;
+            --navy-blue: #0f172a;
+            --sidebar-width: 260px;
+            --bg-light: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Sidebar (เหมือนเดิม) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0; left: 0;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+        }
+
+        .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .brand-link { font-size: 1.4rem; font-weight: 700; color: var(--navy-blue); text-decoration: none; display: flex; align-items: center; }
+        .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
+        .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
+        .menu-category:first-child { margin-top: 0; }
+        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; transition: 0.3s; text-decoration: none; }
+        .nav-link i { width: 25px; font-size: 1.1rem; }
+        .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
+        .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* --- Main Content --- */
+        .main-content { margin-left: var(--sidebar-width); padding: 30px; }
+
+        /* --- Settings Layout --- */
+        .settings-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .settings-sidebar {
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            padding: 20px;
+        }
+
+        .settings-nav .nav-link {
+            color: #475569;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .settings-nav .nav-link.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+        .settings-nav i { width: 25px; }
+
+        .settings-content {
+            padding: 30px;
+            background: white;
+        }
+
+        /* --- Components --- */
+        .company-logo-upload {
+            width: 100px; height: 100px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px dashed #cbd5e1;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .company-logo-upload:hover { border-color: var(--primary-color); }
+        .company-logo-upload img { width: 100%; height: 100%; object-fit: cover; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand-box">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="fa-stack me-2" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
+                </span>
+                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px;">
+                    Green<span class="text-success">Sync</span>
+                </span>
+            </a>
+        </div>
+        
+        <div class="menu-list">
+            <div class="menu-category">ภาพรวม</div>
+            <a href="../dashboard/main-dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+            </a>
+
+            <div class="menu-category">Green Office</div>
+            <a href="../green-office/assessment-list.html" class="nav-link">
+                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+            </a>
+
+            <div class="menu-category">Carbon Footprint</div>
+            <a href="../carbon-footprint/data-entry.html" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
+            </a>
+            
+            <div class="menu-category">ตั้งค่า</div>
+            <a href="settings.html" class="nav-link active">
+                <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
+            </a>
+            <a href="user-management.html" class="nav-link">
+                <i class="fa-solid fa-users-gear"></i> จัดการผู้ใช้งาน
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar">JS</div>
+            <div style="flex: 1; min-width: 0;">
+                <h6 class="mb-0 text-truncate fw-bold">John Smith</h6>
+                <small class="text-muted">Eco Innovation Ltd.</small>
+            </div>
+            <a href="../index.html" class="text-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item active text-success">ตั้งค่าองค์กร</li>
+                    </ol>
+                </nav>
+                <h3 class="fw-bold mb-0">ข้อมูลองค์กรและการตั้งค่าระบบ</h3>
+            </div>
+            <button class="btn btn-primary shadow-sm"><i class="fa-solid fa-save me-2"></i> บันทึกการเปลี่ยนแปลง</button>
+        </div>
+
+        <div class="settings-card">
+            <div class="row g-0">
+                <div class="col-md-3 settings-sidebar">
+                    <div class="nav flex-column nav-pills settings-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <button class="nav-link active" id="v-pills-general-tab" data-bs-toggle="pill" data-bs-target="#v-pills-general" type="button" role="tab">
+                            <i class="fa-solid fa-building me-2"></i> ข้อมูลทั่วไป
+                        </button>
+                        <button class="nav-link" id="v-pills-carbon-tab" data-bs-toggle="pill" data-bs-target="#v-pills-carbon" type="button" role="tab">
+                            <i class="fa-solid fa-leaf me-2"></i> เป้าหมาย & คาร์บอน
+                        </button>
+                        <button class="nav-link" id="v-pills-notify-tab" data-bs-toggle="pill" data-bs-target="#v-pills-notify" type="button" role="tab">
+                            <i class="fa-solid fa-bell me-2"></i> การแจ้งเตือน
+                        </button>
+                        <button class="nav-link text-danger mt-3" id="v-pills-danger-tab" data-bs-toggle="pill" data-bs-target="#v-pills-danger" type="button" role="tab">
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i> Danger Zone
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-9">
+                    <div class="tab-content settings-content" id="v-pills-tabContent">
+                        
+                        <div class="tab-pane fade show active" id="v-pills-general" role="tabpanel">
+                            <h5 class="fw-bold mb-4">ข้อมูลทั่วไปขององค์กร</h5>
+                            
+                            <div class="mb-4 d-flex align-items-center gap-4">
+                                <div class="company-logo-upload shadow-sm" title="คลิกเพื่อเปลี่ยนโลโก้">
+                                    <i class="fa-solid fa-camera text-muted fa-xl"></i>
+                                    </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">โลโก้บริษัท</h6>
+                                    <p class="text-muted small mb-0">รองรับไฟล์ JPG, PNG ขนาดไม่เกิน 2MB (จะแสดงในรายงาน TGO)</p>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">ชื่อหน่วยงาน / บริษัท</label>
+                                    <input type="text" class="form-control" value="บริษัท อีโค่ อินโนเวชั่น จำกัด">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">เลขประจำตัวผู้เสียภาษี (Tax ID)</label>
+                                    <input type="text" class="form-control" value="0105558123456">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">เบอร์โทรศัพท์</label>
+                                    <input type="tel" class="form-control" value="02-123-4567">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">ที่อยู่ (สำหรับออกใบรับรอง)</label>
+                                    <textarea class="form-control" rows="3">123 อาคารซันไชน์ ชั้น 15 ถนนวิภาวดีรังสิต แขวงจอมพล เขตจตุจักร กรุงเทพฯ 10900</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="v-pills-carbon" role="tabpanel">
+                            <h5 class="fw-bold mb-4">การตั้งค่าความยั่งยืน (Sustainability)</h5>
+                            
+                            <div class="card bg-success bg-opacity-10 border-success border-opacity-25 mb-4">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <i class="fa-solid fa-info-circle text-success fa-2x"></i>
+                                        <div>
+                                            <h6 class="fw-bold text-success mb-1">Carbon Tax Configuration</h6>
+                                            <small class="text-dark opacity-75">การตั้งค่าส่วนนี้มีผลต่อการคำนวณต้นทุนเงา (Shadow Carbon Pricing) ในรายงาน</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">ปีฐาน (Base Year)</label>
+                                    <select class="form-select">
+                                        <option>2022</option>
+                                        <option selected>2023</option>
+                                        <option>2024</option>
+                                    </select>
+                                    <div class="form-text">ปีที่ใช้เปรียบเทียบผลการลดก๊าซเรือนกระจก</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-success">เป้าหมายการลด (Reduction Target)</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control fw-bold text-success" value="10">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                    <div class="form-text">เป้าหมายลดการปล่อย CO2 เทียบกับปีฐาน</div>
+                                </div>
+                                
+                                <div class="col-12"><hr class="my-2 opacity-10"></div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">อัตราภาษีคาร์บอน (Internal Carbon Price)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">฿</span>
+                                        <input type="number" class="form-control" value="200">
+                                        <span class="input-group-text">/ tonCO2e</span>
+                                    </div>
+                                    <div class="form-text">ใช้อ้างอิงสำหรับการประเมินความเสี่ยงด้านภาษีในอนาคต</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">มาตรฐานการคำนวณ</label>
+                                    <select class="form-select bg-light" disabled>
+                                        <option selected>TGO (อบก.) - Thailand</option>
+                                        <option>GHG Protocol (Global)</option>
+                                    </select>
+                                    <div class="form-text text-muted">ปัจจุบันระบบรองรับมาตรฐาน TGO เป็นหลัก</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="v-pills-notify" role="tabpanel">
+                            <h5 class="fw-bold mb-4">การแจ้งเตือน (Notifications)</h5>
+                            
+                            <div class="list-group">
+                                <label class="list-group-item d-flex gap-3 align-items-center">
+                                    <input class="form-check-input flex-shrink-0" type="checkbox" checked style="width: 1.5em; height: 1.5em;">
+                                    <div class="d-flex gap-2 w-100 justify-content-between">
+                                        <div>
+                                            <h6 class="mb-0">แจ้งเตือนเมื่อคาร์บอนเกินเป้าหมายรายเดือน</h6>
+                                            <p class="mb-0 opacity-75 small">ระบบจะส่งอีเมลหา Admin ทันทีเมื่อกราฟพุ่งสูงผิดปกติ</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="list-group-item d-flex gap-3 align-items-center">
+                                    <input class="form-check-input flex-shrink-0" type="checkbox" checked style="width: 1.5em; height: 1.5em;">
+                                    <div class="d-flex gap-2 w-100 justify-content-between">
+                                        <div>
+                                            <h6 class="mb-0">แจ้งเตือนวันส่งรายงาน Green Office</h6>
+                                            <p class="mb-0 opacity-75 small">แจ้งเตือนล่วงหน้า 7 วัน ก่อนปิดรอบประเมิน</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="list-group-item d-flex gap-3 align-items-center">
+                                    <input class="form-check-input flex-shrink-0" type="checkbox" style="width: 1.5em; height: 1.5em;">
+                                    <div class="d-flex gap-2 w-100 justify-content-between">
+                                        <div>
+                                            <h6 class="mb-0">ข่าวสารอัปเดตจาก TGO</h6>
+                                            <p class="mb-0 opacity-75 small">รับข่าวสารเกี่ยวกับการเปลี่ยนแปลงค่า Emission Factor</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="v-pills-danger" role="tabpanel">
+                            <h5 class="fw-bold text-danger mb-4">พื้นที่อันตราย (Danger Zone)</h5>
+                            
+                            <div class="border border-danger border-opacity-25 rounded p-4 bg-danger bg-opacity-10">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="fw-bold text-danger">รีเซ็ตข้อมูลทั้งหมด (Reset Factory Data)</h6>
+                                        <p class="text-muted small mb-0">ข้อมูลการประเมินและ Carbon Footprint ทั้งหมดจะถูกลบถาวร ไม่สามารถกู้คืนได้</p>
+                                    </div>
+                                    <button class="btn btn-outline-danger fw-bold">ลบข้อมูลทั้งหมด</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

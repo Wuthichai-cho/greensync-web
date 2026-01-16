@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบฟอร์มประเมิน | GreenSync</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #198754;
+            --navy-blue: #0f172a;
+            --sidebar-width: 260px;
+            --bg-light: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-box {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .brand-link {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--navy-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-list {
+            padding: 20px 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .menu-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            font-weight: 700;
+            padding: 0 15px;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .menu-category:first-child {
+            margin-top: 0;
+        }
+
+        .nav-link {
+            color: #64748b;
+            font-weight: 500;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-link i {
+            width: 25px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: #f0fdf4;
+            color: var(--primary-color);
+        }
+
+        .user-profile {
+            padding: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--navy-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            padding-bottom: 80px;
+        }
+
+        /* --- Category Tabs --- */
+        .category-tabs {
+            background: white;
+            padding: 15px 15px 0 15px;
+            border-radius: 12px 12px 0 0;
+            border: 1px solid #e2e8f0;
+            border-bottom: none;
+        }
+
+        .nav-tabs .nav-link {
+            color: #64748b;
+            font-weight: 500;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 10px 20px;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background: transparent;
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* --- Criteria Card --- */
+        .form-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 30px;
+        }
+
+        .criteria-item {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+        }
+
+        .criteria-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .criteria-code {
+            background: #f0fdf4;
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .score-input {
+            width: 80px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* --- AI Floating Button --- */
+        .ai-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 1050;
+            border: none;
+        }
+
+        .ai-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6);
+        }
+
+        /* --- Chat Window --- */
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 1050;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 15px;
+            background: #f8fafc;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-bubble {
+            padding: 10px 15px;
+            border-radius: 12px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .chat-user {
+            background: #e0f2fe;
+            color: #0369a1;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            border: 1px solid #bae6fd;
+        }
+
+        .chat-ai {
+            background: white;
+            border: 1px solid #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-footer {
+            padding: 10px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #94a3b8;
+            border-radius: 50%;
+            animation: typing 1s infinite ease-in-out both;
+            margin: 0 1px;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="sidebar">
+        <div class="brand-box">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="fa-stack me-2" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
+                </span>
+                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px;">
+                    Green<span class="text-success">Sync</span>
+                </span>
+            </a>
+        </div>
+
+        <div class="menu-list">
+            <div class="menu-category">ภาพรวม</div>
+            <a href="../dashboard/main-dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+            </a>
+
+            <div class="menu-category">Green Office</div>
+            <a href="assessment-list.html" class="nav-link active">
+                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+            </a>
+
+            <div class="menu-category">Carbon Footprint</div>
+            <a href="../carbon-footprint/data-entry.html" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
+            </a>
+            <a href="../carbon-footprint/cfo-report.html" class="nav-link">
+                <i class="fa-solid fa-file-invoice"></i> รายงานผล TGO
+            </a>
+
+            <div class="menu-category">ตั้งค่า</div>
+            <a href="../admin/settings.html" class="nav-link">
+                <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar">JS</div>
+            <div style="flex: 1; min-width: 0;">
+                <h6 class="mb-0 text-truncate fw-bold">John Smith</h6>
+                <small class="text-muted">Eco Innovation Ltd.</small>
+            </div>
+            <a href="../index.html" class="text-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html"
+                                class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item"><a href="assessment-list.html"
+                                class="text-decoration-none text-muted">รายการประเมิน</a></li>
+                        <li class="breadcrumb-item active text-success">ปีงบประมาณ 2025</li>
+                    </ol>
+                </nav>
+                <div class="d-flex align-items-center gap-3">
+                    <h3 class="fw-bold mb-0">แบบประเมินสำนักงานสีเขียว</h3>
+                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-pen"></i> Draft</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary">บันทึกร่าง</button>
+                <button class="btn btn-success"><i class="fa-solid fa-paper-plane me-2"></i>ส่งประเมิน</button>
+            </div>
+        </div>
+
+        <div class="alert alert-light border d-flex align-items-center mb-4 shadow-sm" role="alert">
+            <i class="fa-solid fa-chart-line text-success fs-4 me-3"></i>
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-bold text-dark small">ความคืบหน้าภาพรวม</span>
+                    <span class="fw-bold text-success small">45%</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 45%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-tabs">
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link active" href="#">หมวดที่ 1: นโยบาย</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 2: การสื่อสาร</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 3: หมวดสำนักงาน</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 4: พลังงาน</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 5: อากาศ/น้ำ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 6: จัดซื้อ</a></li>
+            </ul>
+        </div>
+
+        <div class="form-container">
+            <h5 class="fw-bold mb-4">หมวดที่ 1: การกำหนดนโยบาย การวางแผนการดำเนินงาน และการปรับปรุงอย่างต่อเนื่อง</h5>
+
+            <div class="criteria-item">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="criteria-code">1.1</span>
+                        <span class="fw-bold">การกำหนดนโยบายสิ่งแวดล้อม</span>
+                        <p class="text-muted small mt-1 mb-0 w-75">ต้องมีการกำหนดนโยบายที่ครอบคลุมการจัดการสิ่งแวดล้อม
+                            และมีการลงนามโดยผู้บริหารสูงสุด</p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                        <input type="number" class="form-control score-input d-inline-block" value="5" max="5" min="0">
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 rounded border border-dashed">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <small class="fw-bold text-dark"><i class="fa-solid fa-paperclip me-1"></i>
+                                หลักฐานแนบ:</small>
+                            <div class="mt-2 d-flex gap-2">
+                                <span class="badge bg-white text-dark border"><i
+                                        class="fa-regular fa-file-pdf text-danger"></i> Policy_2025.pdf <i
+                                        class="fa-solid fa-xmark ms-2 text-muted" style="cursor:pointer"></i></span>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-upload me-1"></i>
+                            อัปโหลดเพิ่ม</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="criteria-item">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="criteria-code">1.2</span>
+                        <span class="fw-bold">การสื่อสารนโยบายแก่พนักงาน</span>
+                        <p class="text-muted small mt-1 mb-0 w-75">ต้องมีการประกาศนโยบายให้พนักงานทราบผ่านช่องทางต่างๆ
+                            เช่น เสียงตามสาย, บอร์ดประชาสัมพันธ์, Email</p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                        <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5"
+                            min="0">
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 rounded border border-dashed text-center">
+                    <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-plus me-1"></i>
+                        อัปโหลดไฟล์หลักฐาน</button>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">รองรับ PDF, JPG ไม่เกิน
+                        5MB</small>
+                </div>
+            </div>
+
+            <div class="criteria-item">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="criteria-code">1.3</span>
+                        <span class="fw-bold">คณะทำงานด้านสิ่งแวดล้อม</span>
+                        <p class="text-muted small mt-1 mb-0 w-75">มีคำสั่งแต่งตั้งคณะทำงานที่ชัดเจน
+                            และมีการประชุมอย่างน้อยปีละ 2 ครั้ง</p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                        <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5"
+                            min="0">
+                    </div>
+                </div>
+                <div class="bg-light p-3 rounded border border-dashed text-center">
+                    <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-plus me-1"></i>
+                        อัปโหลดไฟล์หลักฐาน</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <button class="ai-fab" id="aiBtn" title="ถาม AI ผู้ช่วย">
+        <i class="fa-solid fa-robot"></i>
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-robot"></i> <strong>AI Green Consultant</strong>
+            </div>
+            <button type="button" class="btn-close btn-close-white" id="closeChat"></button>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+            <div class="chat-bubble chat-ai">
+                สวัสดีครับ! 👋 ผมคือ AI ผู้ช่วยประจำ Green Office <br>
+                มีข้อสงสัยเรื่องเกณฑ์ข้อไหน หรืออยากให้ช่วยร่างนโยบาย ถามได้เลยครับ!
+            </div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" class="form-control" id="chatInput"
+                placeholder="พิมพ์คำถาม... (เช่น ข้อ 1.2 ใช้อะไรแนบ)">
+            <button class="btn btn-primary" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        const aiBtn = document.getElementById('aiBtn');
+        const chatWindow = document.getElementById('chatWindow');
+        const closeChat = document.getElementById('closeChat');
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // 1. เปิด/ปิด Chat Window
+        aiBtn.addEventListener('click', () => {
+            chatWindow.style.display = (chatWindow.style.display === 'flex') ? 'none' : 'flex';
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatWindow.style.display = 'none';
+        });
+
+        // 2. ฟังก์ชันส่งข้อความ
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // ฝั่ง User: สร้าง Bubble ข้อความ
+            addMessage('user', text);
+            chatInput.value = '';
+
+            // AI: แสดงสถานะกำลังพิมพ์...
+            const loadingId = addLoading();
+
+            // AI: ตอบกลับ (Delay 1 วินาที ให้ดูสมจริง)
+            setTimeout(() => {
+                removeLoading(loadingId);
+                const response = getAIResponse(text);
+                addMessage('ai', response);
+            }, 1000);
+        }
+
+        // Helper: เพิ่ม Bubble ลงหน้าจอ
+        function addMessage(role, text) {
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble chat-${role}`;
+            bubble.innerHTML = text;
+            chatBody.appendChild(bubble);
+            chatBody.scrollTop = chatBody.scrollHeight; // เลื่อนลงล่างสุด
+        }
+
+        // Helper: แสดงจุด Loading
+        function addLoading() {
+            const id = 'loading-' + Date.now();
+            const bubble = document.createElement('div');
+            bubble.id = id;
+            bubble.className = 'chat-bubble chat-ai typing-indicator';
+            bubble.innerHTML = '<span></span><span></span><span></span>';
+            chatBody.appendChild(bubble);
+            chatBody.scrollTop = chatBody.scrollHeight;
+            return id;
+        }
+
+        // Helper: ลบจุด Loading
+        function removeLoading(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        // Logic: AI สมองกล (Mockup)
+        function getAIResponse(input) {
+            input = input.toLowerCase();
+
+            if (input.includes('1.1') || input.includes('นโยบาย')) {
+                return "<strong>เกณฑ์ 1.1 (นโยบายสิ่งแวดล้อม)</strong> ต้องแนบ:<br>1. ประกาศนโยบายฉบับจริง (มีลายเซ็น)<br>2. ภาพถ่ายการติดประกาศในพื้นที่ต่างๆ";
+            }
+            if (input.includes('1.2') || input.includes('สื่อสาร')) {
+                return "<strong>เกณฑ์ 1.2 (การสื่อสาร)</strong> แนะนำให้ใช้ช่องทางหลากหลายครับ เช่น:<br>- เสียงตามสาย<br>- อีเมลแจ้งพนักงาน<br>- บอร์ดประชาสัมพันธ์<br><em>(ต้องมีรูปถ่ายเป็นหลักฐานนะครับ)</em>";
+            }
+            if (input.includes('1.3') || input.includes('คณะทำงาน')) {
+                return "<strong>เกณฑ์ 1.3 (คณะทำงาน)</strong> ต้องมี:<br>1. คำสั่งแต่งตั้งคณะทำงาน (ลงนามโดยผู้บริหาร)<br>2. รายงานการประชุมคณะทำงาน (อย่างน้อยปีละ 2 ครั้ง)";
+            }
+            if (input.includes('สวัสดี') || input.includes('hi')) {
+                return "สวัสดีครับ! วันนี้จะเริ่มประเมินหมวดไหนดีครับ? 😊";
+            }
+
+            return "ขอโทษครับ ผมยังไม่เข้าใจคำถาม ลองระบุเลขข้อ (เช่น 1.1, 1.2) ดูนะครับ";
+        }
+
+        // Event Listeners
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

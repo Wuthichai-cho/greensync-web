@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการผู้ใช้งาน | GreenSync</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #198754;
+            --navy-blue: #0f172a;
+            --sidebar-width: 260px;
+            --bg-light: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Sidebar (เหมือนเดิม) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0; left: 0;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+        }
+
+        .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .brand-link { font-size: 1.4rem; font-weight: 700; color: var(--navy-blue); text-decoration: none; display: flex; align-items: center; }
+        .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
+        .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
+        .menu-category:first-child { margin-top: 0; }
+        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; transition: 0.3s; text-decoration: none; }
+        .nav-link i { width: 25px; font-size: 1.1rem; }
+        .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
+        .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* --- Main Content --- */
+        .main-content { margin-left: var(--sidebar-width); padding: 30px; }
+
+        /* --- Stats Card --- */
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        /* --- User Table --- */
+        .user-table-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-users th {
+            background: #f8fafc; font-weight: 600; color: #475569; border-bottom: 1px solid #e2e8f0;
+        }
+        .table-users td { vertical-align: middle; }
+
+        /* Status Badge */
+        .badge-status { padding: 5px 10px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-inactive { background: #f1f5f9; color: #64748b; }
+
+        /* Role Badge */
+        .badge-role { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; }
+        .role-admin { background: #0f172a; color: white; }
+        .role-manager { background: #e0f2fe; color: #0369a1; }
+        .role-staff { background: #f1f5f9; color: #475569; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand-box">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="fa-stack me-2" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
+                </span>
+                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px;">
+                    Green<span class="text-success">Sync</span>
+                </span>
+            </a>
+        </div>
+        
+        <div class="menu-list">
+            <div class="menu-category">ภาพรวม</div>
+            <a href="../dashboard/main-dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+            </a>
+
+            <div class="menu-category">Green Office</div>
+            <a href="../green-office/assessment-list.html" class="nav-link">
+                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+            </a>
+
+            <div class="menu-category">Carbon Footprint</div>
+            <a href="../carbon-footprint/data-entry.html" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
+            </a>
+            
+            <div class="menu-category">ตั้งค่า</div>
+            <a href="settings.html" class="nav-link">
+                <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
+            </a>
+            <a href="user-management.html" class="nav-link active">
+                <i class="fa-solid fa-users-gear"></i> จัดการผู้ใช้งาน
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar">JS</div>
+            <div style="flex: 1; min-width: 0;">
+                <h6 class="mb-0 text-truncate fw-bold">John Smith</h6>
+                <small class="text-muted">Eco Innovation Ltd.</small>
+            </div>
+            <a href="../index.html" class="text-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item active text-success">จัดการผู้ใช้งาน</li>
+                    </ol>
+                </nav>
+                <h3 class="fw-bold mb-0">รายชื่อพนักงานและสิทธิ์การใช้งาน</h3>
+            </div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <i class="fa-solid fa-user-plus me-2"></i> เพิ่มผู้ใช้งาน
+            </button>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted text-uppercase fw-bold">ผู้ใช้งานทั้งหมด</small>
+                        <h3 class="fw-bold mb-0">24</h3>
+                        <small class="text-success">Active Users</small>
+                    </div>
+                    <div class="p-3 bg-light rounded-circle text-primary">
+                        <i class="fa-solid fa-users fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted text-uppercase fw-bold">Admin (ผู้ดูแล)</small>
+                        <h3 class="fw-bold mb-0">2</h3>
+                        <small class="text-muted">Full Access</small>
+                    </div>
+                    <div class="p-3 bg-light rounded-circle text-dark">
+                        <i class="fa-solid fa-user-shield fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted text-uppercase fw-bold">รอการยืนยัน</small>
+                        <h3 class="fw-bold mb-0">1</h3>
+                        <small class="text-warning">Pending Invite</small>
+                    </div>
+                    <div class="p-3 bg-light rounded-circle text-warning">
+                        <i class="fa-solid fa-envelope fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4 p-3">
+            <div class="row g-2">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" placeholder="ค้นหาชื่อ, อีเมล...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>ทุกแผนก</option>
+                        <option>บริหาร (Management)</option>
+                        <option>บุคคล (HR)</option>
+                        <option>วิศวกรรม (Engineering)</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select">
+                        <option selected>ทุกสถานะ</option>
+                        <option>ใช้งานอยู่ (Active)</option>
+                        <option>ระงับ (Inactive)</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-light w-100 border text-muted"><i class="fa-solid fa-filter me-1"></i> รีเซ็ต</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-table-card">
+            <div class="table-responsive">
+                <table class="table table-users table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">ชื่อ - นามสกุล</th>
+                            <th>อีเมล</th>
+                            <th>ตำแหน่ง (Role)</th>
+                            <th>แผนก</th>
+                            <th>สถานะ</th>
+                            <th>ใช้งานล่าสุด</th>
+                            <th class="text-end pe-4">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-primary text-white me-3" style="font-size: 0.8rem;">JS</div>
+                                    <div>
+                                        <div class="fw-bold text-dark">John Smith</div>
+                                        <small class="text-muted">ผู้จัดการสิ่งแวดล้อม</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>john@ecoinnovation.com</td>
+                            <td><span class="badge-role role-admin">Admin</span></td>
+                            <td>Management</td>
+                            <td><span class="badge-status status-active">Active</span></td>
+                            <td class="text-muted small">เมื่อสักครู่</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-light border me-1" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-light border text-danger" title="ลบ"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-warning text-dark me-3" style="font-size: 0.8rem;">VP</div>
+                                    <div>
+                                        <div class="fw-bold text-dark">วิภาดา ใจดี</div>
+                                        <small class="text-muted">เจ้าหน้าที่ความปลอดภัย</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>vipada@ecoinnovation.com</td>
+                            <td><span class="badge-role role-manager">Manager</span></td>
+                            <td>Safety & Env</td>
+                            <td><span class="badge-status status-active">Active</span></td>
+                            <td class="text-muted small">เมื่อวาน 16:30</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-light border text-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-secondary text-white me-3" style="font-size: 0.8rem;">SK</div>
+                                    <div>
+                                        <div class="fw-bold text-dark">สมเกียรติ มั่นคง</div>
+                                        <small class="text-muted">วิศวกรโรงงาน</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>somkiat@ecoinnovation.com</td>
+                            <td><span class="badge-role role-staff">Staff</span></td>
+                            <td>Engineering</td>
+                            <td><span class="badge-status status-inactive">Inactive</span></td>
+                            <td class="text-muted small">30 วันที่แล้ว</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-light border text-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3 border-top d-flex justify-content-between align-items-center">
+                <small class="text-muted">แสดง 1-3 จาก 24 รายชื่อ</small>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><a class="page-link" href="#">ก่อนหน้า</a></li>
+                        <li class="page-item active"><a class="page-link bg-success border-success" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link text-success" href="#">ถัดไป</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">เพิ่มผู้ใช้งานใหม่</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">ชื่อจริง</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">นามสกุล</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">อีเมลองค์กร</label>
+                                <input type="email" class="form-control" placeholder="name@company.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">แผนก / ฝ่าย</label>
+                                <select class="form-select">
+                                    <option>เลือกแผนก...</option>
+                                    <option>Management</option>
+                                    <option>HR</option>
+                                    <option>Engineering</option>
+                                    <option>Safety & Env</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">ตำแหน่งในระบบ (Role)</label>
+                                <select class="form-select">
+                                    <option value="staff">Staff (ดูข้อมูล/กรอกบางส่วน)</option>
+                                    <option value="manager">Manager (จัดการข้อมูล/รายงาน)</option>
+                                    <option value="admin">Admin (สิทธิ์สูงสุด)</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="sendInvite" checked>
+                                    <label class="form-check-label" for="sendInvite">ส่งอีเมลเชิญให้ตั้งรหัสผ่านทันที</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-success">บันทึกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

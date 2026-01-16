@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงาน CFO | GreenSync</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #198754;
+            --navy-blue: #0f172a;
+            --sidebar-width: 260px;
+            --bg-light: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Sidebar (เหมือนเดิม) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .brand-link { font-size: 1.4rem; font-weight: 700; color: var(--navy-blue); text-decoration: none; display: flex; align-items: center; }
+        .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
+        .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
+        .menu-category:first-child { margin-top: 0; }
+        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; transition: 0.3s; text-decoration: none; }
+        .nav-link i { width: 25px; font-size: 1.1rem; }
+        .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
+        .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* --- Main Content --- */
+        .main-content { margin-left: var(--sidebar-width); padding: 30px; }
+
+        /* --- Report Cards --- */
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            height: 100%;
+        }
+
+        .scope-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .scope-1 { background: #fffbeb; color: #d97706; border: 1px solid #fcd34d; } /* Yellow */
+        .scope-2 { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; } /* Blue */
+        .scope-3 { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; } /* Green */
+
+        /* Table */
+        .table-report th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .table-report td { vertical-align: middle; font-size: 0.95rem; }
+
+        /* Print Mode */
+        @media print {
+            .sidebar, .no-print { display: none !important; }
+            .main-content { margin-left: 0; padding: 0; }
+            body { background-color: white; }
+            .report-card { border: none; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand-box">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="fa-stack me-2" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
+                </span>
+                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px;">
+                    Green<span class="text-success">Sync</span>
+                </span>
+            </a>
+        </div>
+        
+        <div class="menu-list">
+            <div class="menu-category">ภาพรวม</div>
+            <a href="../dashboard/main-dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+            </a>
+
+            <div class="menu-category">Green Office</div>
+            <a href="../green-office/assessment-list.html" class="nav-link">
+                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+            </a>
+
+            <div class="menu-category">Carbon Footprint</div>
+            <a href="data-entry.html" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
+            </a>
+            <a href="cfo-report.html" class="nav-link active">
+                <i class="fa-solid fa-file-invoice"></i> รายงานผล TGO
+            </a>
+            
+            <div class="menu-category">ตั้งค่า</div>
+            <a href="../admin/settings.html" class="nav-link">
+                <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar">JS</div>
+            <div style="flex: 1; min-width: 0;">
+                <h6 class="mb-0 text-truncate fw-bold">John Smith</h6>
+                <small class="text-muted">Eco Innovation Ltd.</small>
+            </div>
+            <a href="../index.html" class="text-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item active text-success">รายงานผล CFO</li>
+                    </ol>
+                </nav>
+                <h3 class="fw-bold mb-0">รายงานก๊าซเรือนกระจกองค์กร</h3>
+            </div>
+            <div class="d-flex gap-2">
+                <select class="form-select w-auto">
+                    <option selected>ปี 2024 (ม.ค. - ธ.ค.)</option>
+                    <option>ปี 2023 (ม.ค. - ธ.ค.)</option>
+                </select>
+                <button class="btn btn-outline-primary" onclick="window.print()"><i class="fa-solid fa-print me-2"></i>พิมพ์รายงาน</button>
+                <button class="btn btn-success"><i class="fa-solid fa-file-export me-2"></i>Export Excel</button>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="report-card bg-success text-white" style="border:none;">
+                    <small class="text-white opacity-75 fw-bold text-uppercase">Total Emissions</small>
+                    <h2 class="fw-bold mb-0 mt-2">1,245.80</h2>
+                    <small>tCO2e (ตันคาร์บอน)</small>
+                    <hr class="my-3 opacity-25">
+                    <div class="d-flex justify-content-between small">
+                        <span>เทียบปีฐาน (2023)</span>
+                        <span class="fw-bold"><i class="fa-solid fa-arrow-down"></i> -5.4%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="report-card border-warning border-top-0 border-end-0 border-bottom-0 border-4">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span class="scope-badge scope-1">Scope 1</span>
+                            <h4 class="fw-bold mt-2 mb-0">320.50</h4>
+                            <small class="text-muted">tCO2e</small>
+                        </div>
+                        <i class="fa-solid fa-fire-flame-curved text-warning fs-3 opacity-50"></i>
+                    </div>
+                    <small class="text-muted d-block mt-3">การเผาไหม้โดยตรง (น้ำมัน, แก๊ส)</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="report-card border-primary border-top-0 border-end-0 border-bottom-0 border-4">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span class="scope-badge scope-2">Scope 2</span>
+                            <h4 class="fw-bold mt-2 mb-0">840.10</h4>
+                            <small class="text-muted">tCO2e</small>
+                        </div>
+                        <i class="fa-solid fa-bolt text-primary fs-3 opacity-50"></i>
+                    </div>
+                    <small class="text-muted d-block mt-3">พลังงานไฟฟ้าที่ซื้อมาใช้</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="report-card border-success border-top-0 border-end-0 border-bottom-0 border-4">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span class="scope-badge scope-3">Scope 3</span>
+                            <h4 class="fw-bold mt-2 mb-0">85.20</h4>
+                            <small class="text-muted">tCO2e</small>
+                        </div>
+                        <i class="fa-solid fa-recycle text-success fs-3 opacity-50"></i>
+                    </div>
+                    <small class="text-muted d-block mt-3">ทางอ้อมอื่นๆ (กระดาษ, น้ำ, ขยะ)</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="report-card">
+                    <h6 class="fw-bold text-muted mb-4">แนวโน้มการปล่อยก๊าซเรือนกระจกรายเดือน</h6>
+                    <canvas id="trendChart" height="120"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="report-card">
+                    <h6 class="fw-bold text-muted mb-4">สัดส่วนตามแหล่งที่มา</h6>
+                    <canvas id="sourceChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card p-0 overflow-hidden">
+            <div class="p-4 border-bottom bg-light d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-0">รายละเอียดข้อมูลแยกตามประเภท</h6>
+                <small class="text-muted">ข้อมูล ณ วันที่ 25 ม.ค. 2024</small>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-report table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Scope / แหล่งปล่อย</th>
+                            <th>ปริมาณการใช้</th>
+                            <th>Emission Factor</th>
+                            <th>Emission (tCO2e)</th>
+                            <th>% Share</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4"><span class="scope-badge scope-1 me-2">Scope 1</span> น้ำมันดีเซล (รถยนต์บริษัท)</td>
+                            <td>45,000 ลิตร</td>
+                            <td>2.708 kgCO2e/L</td>
+                            <td class="fw-bold">121.86</td>
+                            <td>9.8%</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4"><span class="scope-badge scope-1 me-2">Scope 1</span> LPG (โรงอาหาร)</td>
+                            <td>500 kg</td>
+                            <td>3.10 kgCO2e/kg</td>
+                            <td class="fw-bold">1.55</td>
+                            <td>0.1%</td>
+                        </tr>
+                        
+                        <tr class="table-active bg-opacity-10">
+                            <td class="ps-4"><span class="scope-badge scope-2 me-2">Scope 2</span> ไฟฟ้า (MEA)</td>
+                            <td>1,680,500 kWh</td>
+                            <td>0.4999 kgCO2e/kWh</td>
+                            <td class="fw-bold text-primary">840.10</td>
+                            <td class="fw-bold text-primary">67.4%</td>
+                        </tr>
+
+                        <tr>
+                            <td class="ps-4"><span class="scope-badge scope-3 me-2">Scope 3</span> น้ำประปา</td>
+                            <td>25,000 m3</td>
+                            <td>0.345 kgCO2e/m3</td>
+                            <td class="fw-bold">8.62</td>
+                            <td>0.7%</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4"><span class="scope-badge scope-3 me-2">Scope 3</span> กระดาษ A4</td>
+                            <td>500 รีม</td>
+                            <td>4.50 kgCO2e/ream</td>
+                            <td class="fw-bold">2.25</td>
+                            <td>0.2%</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">รวมทั้งหมด (Total):</td>
+                            <td class="fw-bold text-success fs-5">1,245.80</td>
+                            <td class="fw-bold">100%</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="report-card mt-4 bg-white border border-success border-opacity-25 no-print">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success">
+                        <i class="fa-solid fa-certificate fa-xl"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-1">พร้อมสำหรับการทวนสอบแล้วหรือยัง?</h5>
+                        <p class="text-muted mb-0 small">ข้อมูลของคุณครบถ้วน สามารถส่งให้ผู้ทวนสอบ (Auditor) ตรวจสอบเพื่อขอรับรอง Carbon Footprint ได้ทันที</p>
+                    </div>
+                </div>
+                <button class="btn btn-success fw-bold px-4"><i class="fa-solid fa-paper-plane me-2"></i>ส่งขอการรับรอง (Verify)</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Monthly Trend Chart
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'bar',
+            data: {
+                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                datasets: [
+                    {
+                        label: 'ปริมาณคาร์บอน (tCO2e)',
+                        data: [105, 110, 95, 120, 115, 100, 105, 98, 92, 105, 100, 105],
+                        backgroundColor: '#198754',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. Source Breakdown Chart
+        const ctxSource = document.getElementById('sourceChart').getContext('2d');
+        new Chart(ctxSource, {
+            type: 'doughnut',
+            data: {
+                labels: ['ไฟฟ้า (67%)', 'น้ำมันเชื้อเพลิง (10%)', 'อื่นๆ (Scope 3) (23%)'],
+                datasets: [{
+                    data: [67, 10, 23],
+                    backgroundColor: ['#2563eb', '#d97706', '#166534'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

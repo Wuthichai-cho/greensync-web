@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คลังเอกสาร | GreenSync</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #198754;
+            --navy-blue: #0f172a;
+            --sidebar-width: 260px;
+            --bg-light: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Sidebar (เหมือนเดิม) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0; left: 0;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            display: flex; flex-direction: column;
+        }
+
+        .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .brand-link { font-size: 1.4rem; font-weight: 700; color: var(--navy-blue); text-decoration: none; display: flex; align-items: center; }
+        .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
+        .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
+        .menu-category:first-child { margin-top: 0; }
+        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; transition: 0.3s; text-decoration: none; }
+        .nav-link i { width: 25px; font-size: 1.1rem; }
+        .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
+        .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* --- Main Content --- */
+        .main-content { margin-left: var(--sidebar-width); padding: 30px; }
+
+        /* --- File Cards --- */
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* --- File Table --- */
+        .file-table-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .table-files th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-files td {
+            vertical-align: middle;
+            color: #334155;
+        }
+
+        .file-icon {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        .icon-pdf { background: #fee2e2; color: #dc2626; }
+        .icon-img { background: #e0f2fe; color: #0284c7; }
+        .icon-doc { background: #dbeafe; color: #2563eb; }
+        .icon-xls { background: #dcfce7; color: #166534; }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .tag-green { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .tag-carbon { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand-box">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="fa-stack me-2" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
+                </span>
+                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px;">
+                    Green<span class="text-success">Sync</span>
+                </span>
+            </a>
+        </div>
+        
+        <div class="menu-list">
+            <div class="menu-category">ภาพรวม</div>
+            <a href="../dashboard/main-dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+            </a>
+
+            <div class="menu-category">Green Office</div>
+            <a href="assessment-list.html" class="nav-link">
+                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+            </a>
+            <a href="document-library.html" class="nav-link active">
+                <i class="fa-solid fa-folder-open"></i> คลังเอกสาร
+            </a>
+
+            <div class="menu-category">Carbon Footprint</div>
+            <a href="../carbon-footprint/data-entry.html" class="nav-link">
+                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
+            </a>
+            <a href="../carbon-footprint/cfo-report.html" class="nav-link">
+                <i class="fa-solid fa-file-invoice"></i> รายงานผล TGO
+            </a>
+            
+            <div class="menu-category">ตั้งค่า</div>
+            <a href="../admin/settings.html" class="nav-link">
+                <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar">JS</div>
+            <div style="flex: 1; min-width: 0;">
+                <h6 class="mb-0 text-truncate fw-bold">John Smith</h6>
+                <small class="text-muted">Eco Innovation Ltd.</small>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item active text-success">คลังเอกสาร</li>
+                    </ol>
+                </nav>
+                <h3 class="fw-bold mb-0">จัดการเอกสาร (Document Library)</h3>
+            </div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="fa-solid fa-cloud-arrow-up me-2"></i> อัปโหลดเอกสาร
+            </button>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted text-uppercase fw-bold">Total Files</small>
+                        <h3 class="fw-bold mb-0">1,240</h3>
+                        <small class="text-success"><i class="fa-solid fa-arrow-up"></i> +12 สัปดาห์นี้</small>
+                    </div>
+                    <div class="p-3 bg-light rounded-circle text-primary">
+                        <i class="fa-solid fa-copy fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted text-uppercase fw-bold">Storage Used</small>
+                        <h3 class="fw-bold mb-0">4.2 <small class="fs-6 text-muted">GB</small></h3>
+                        <small class="text-muted">จากทั้งหมด 10 GB</small>
+                    </div>
+                    <div class="p-3 bg-light rounded-circle text-warning">
+                        <i class="fa-solid fa-server fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted text-uppercase fw-bold">Last Upload</small>
+                        <h5 class="fw-bold mb-0 text-truncate" style="max-width: 150px;">Policy_2025.pdf</h5>
+                        <small class="text-muted">โดย John Smith</small>
+                    </div>
+                    <div class="p-3 bg-light rounded-circle text-info">
+                        <i class="fa-solid fa-clock-rotate-left fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4 p-3">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" placeholder="ค้นหาชื่อเอกสาร...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>📂 ทุกหมวดหมู่</option>
+                        <option>Green Office (หมวด 1-6)</option>
+                        <option>Carbon Footprint (CFO)</option>
+                        <option>เอกสารทั่วไป</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>📄 ทุกประเภทไฟล์</option>
+                        <option>PDF Document</option>
+                        <option>Images (JPG/PNG)</option>
+                        <option>Excel Sheet</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-light w-100 border"><i class="fa-solid fa-filter me-1"></i> ตัวกรอง</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="file-table-card">
+            <div class="table-responsive">
+                <table class="table table-files table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">ชื่อเอกสาร</th>
+                            <th>หมวดหมู่</th>
+                            <th>ขนาด</th>
+                            <th>ผู้อัปโหลด</th>
+                            <th>วันที่</th>
+                            <th class="text-end pe-4">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="file-icon icon-pdf"><i class="fa-solid fa-file-pdf"></i></div>
+                                    <div>
+                                        <div class="fw-bold text-dark">นโยบายสิ่งแวดล้อม_2568.pdf</div>
+                                        <small class="text-muted">Version 1.2 (Signed)</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="tag tag-green">Green Office หมวด 1</span></td>
+                            <td>2.4 MB</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-primary text-white" style="width: 24px; height: 24px; font-size: 0.6rem; margin-right: 8px;">JS</div>
+                                    <small>John Smith</small>
+                                </div>
+                            </td>
+                            <td>25 ม.ค. 2568</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-download"></i></button>
+                                <button class="btn btn-sm btn-light border text-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="file-icon icon-img"><i class="fa-regular fa-image"></i></div>
+                                    <div>
+                                        <div class="fw-bold text-dark">รูปถ่ายกิจกรรม_5ส_มกรา.jpg</div>
+                                        <small class="text-muted">1920x1080 px</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="tag tag-green">Green Office หมวด 2</span></td>
+                            <td>4.1 MB</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-warning text-dark" style="width: 24px; height: 24px; font-size: 0.6rem; margin-right: 8px;">VP</div>
+                                    <small>Vipada</small>
+                                </div>
+                            </td>
+                            <td>20 ม.ค. 2568</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-download"></i></button>
+                                <button class="btn btn-sm btn-light border text-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="file-icon icon-pdf"><i class="fa-solid fa-file-invoice"></i></div>
+                                    <div>
+                                        <div class="fw-bold text-dark">บิลค่าไฟฟ้า_ธันวาคม_67.pdf</div>
+                                        <small class="text-muted">MEA Invoice</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="tag tag-carbon">CFO: Scope 2</span></td>
+                            <td>1.2 MB</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-primary text-white" style="width: 24px; height: 24px; font-size: 0.6rem; margin-right: 8px;">JS</div>
+                                    <small>John Smith</small>
+                                </div>
+                            </td>
+                            <td>15 ม.ค. 2568</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-sm btn-light border me-1"><i class="fa-solid fa-download"></i></button>
+                                <button class="btn btn-sm btn-light border text-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3 border-top d-flex justify-content-between align-items-center">
+                <small class="text-muted">แสดง 1-3 จาก 1,240 รายการ</small>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><a class="page-link" href="#">ก่อนหน้า</a></li>
+                        <li class="page-item active"><a class="page-link bg-success border-success" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link text-success" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link text-success" href="#">ถัดไป</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">อัปโหลดเอกสารใหม่</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">เลือกไฟล์</label>
+                            <input class="form-control" type="file" multiple>
+                            <div class="form-text">รองรับ PDF, JPG, PNG, Excel (ไม่เกิน 10MB)</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">หมวดหมู่</label>
+                            <select class="form-select">
+                                <option>เลือกหมวดหมู่...</option>
+                                <option>Green Office หมวด 1</option>
+                                <option>Green Office หมวด 2</option>
+                                <option>Green Office หมวด 3</option>
+                                <option>CFO: ข้อมูลกิจกรรม</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">คำอธิบายเพิ่มเติม</label>
+                            <textarea class="form-control" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-success">ยืนยันการอัปโหลด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
