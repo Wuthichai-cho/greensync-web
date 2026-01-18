@@ -25,22 +25,9 @@
             overflow-x: hidden;
         }
 
-        /* --- Sidebar --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: white;
-            position: fixed;
-            top: 0;
-            left: 0;
-            border-right: 1px solid #e2e8f0;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-        }
-
+        /* --- Sidebar & Layout (คงเดิม) --- */
+        .sidebar { width: var(--sidebar-width); height: 100vh; background: white; position: fixed; top: 0; left: 0; border-right: 1px solid #e2e8f0; z-index: 1000; display: flex; flex-direction: column; }
         .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
-        .brand-link { font-size: 1.4rem; font-weight: 700; color: var(--navy-blue); text-decoration: none; display: flex; align-items: center; }
         .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
         .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
         .menu-category:first-child { margin-top: 0; }
@@ -49,41 +36,14 @@
         .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
         .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
         .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-        /* --- Main Content --- */
         .main-content { margin-left: var(--sidebar-width); padding: 30px; }
 
         /* --- Upload Zone Styles --- */
-        .upload-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            border: 1px solid #e2e8f0;
-            height: 100%;
-        }
-
-        /* Class สำหรับ Drag & Drop ที่ตรงกับ Script */
-        .border-dashed {
-            border: 2px dashed #cbd5e1;
-            background: #f8fafc;
-            border-radius: 12px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        
-        .border-dashed:hover {
-            border-color: var(--primary-color);
-            background: #f0fdf4;
-        }
-
-        /* Animation Pulse สำหรับ Loading */
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
+        .upload-card { background: white; border-radius: 12px; padding: 30px; border: 1px solid #e2e8f0; height: 100%; }
+        .border-dashed { border: 2px dashed #cbd5e1; background: #f8fafc; border-radius: 12px; transition: 0.3s; cursor: pointer; }
+        .border-dashed:hover { border-color: var(--primary-color); background: #f0fdf4; }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
         .animate-pulse { animation: pulse 1.5s infinite; }
-
     </style>
 </head>
 <body>
@@ -100,32 +60,16 @@
                 </span>
             </a>
         </div>
-        
         <div class="menu-list">
             <div class="menu-category">ภาพรวม</div>
-            <a href="../dashboard/main-dashboard.html" class="nav-link">
-                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
-            </a>
-
+            <a href="../dashboard/main-dashboard.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i> แดชบอร์ด</a>
             <div class="menu-category">Green Office</div>
-            <a href="../green-office/assessment-list.html" class="nav-link">
-                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
-            </a>
-
+            <a href="../green-office/assessment-list.html" class="nav-link"><i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน</a>
             <div class="menu-category">Carbon Footprint</div>
-            <a href="data-entry.html" class="nav-link active">
-                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
-            </a>
-            <a href="cfo-report.html" class="nav-link">
-                <i class="fa-solid fa-file-invoice"></i> รายงานผล TGO
-            </a>
-            
+            <a href="data-entry.html" class="nav-link active"><i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)</a>
             <div class="menu-category">ตั้งค่า</div>
-            <a href="../admin/settings.html" class="nav-link">
-                <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
-            </a>
+            <a href="../admin/settings.html" class="nav-link"><i class="fa-solid fa-building"></i> ข้อมูลองค์กร</a>
         </div>
-
         <div class="user-profile">
             <div class="avatar">JS</div>
             <div style="flex: 1; min-width: 0;">
@@ -137,7 +81,6 @@
     </nav>
 
     <div class="main-content">
-        
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <nav aria-label="breadcrumb">
@@ -148,7 +91,6 @@
                 </nav>
                 <h3 class="fw-bold mb-0">บันทึกข้อมูลการปล่อยก๊าซเรือนกระจก</h3>
             </div>
-            <button class="btn btn-outline-secondary"><i class="fa-solid fa-clock-rotate-left me-2"></i>ดูประวัติการบันทึก</button>
         </div>
 
         <div class="row g-4">
@@ -158,84 +100,67 @@
                     
                     <div class="border-dashed p-5 text-center position-relative" id="uploadArea">
                         <input type="file" id="fileInput" accept="image/*,.pdf" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer;">
-                        
                         <div class="mb-3">
                             <div class="bg-white p-3 rounded-circle shadow-sm d-inline-block">
                                 <i class="fa-solid fa-cloud-arrow-up fa-2x text-primary"></i>
                             </div>
                         </div>
-                        <h6 class="fw-bold mb-1">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่ออัปโหลด</h6>
-                        <p class="text-muted small mb-0">รองรับไฟล์ JPG, PNG (ขนาดไม่เกิน 5MB)</p>
+                        <h6 class="fw-bold mb-1">ลากไฟล์บิล (ไฟ/น้ำ) มาวางที่นี่</h6>
+                        <p class="text-muted small mb-0">รองรับบิลค่าไฟ (PEA/MEA) และค่าน้ำประปา</p>
                     </div>
 
                     <div id="ocrLoading" class="text-center mt-4" style="display: none;">
-                        <div class="spinner-border text-primary mb-2" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="text-muted small animate-pulse">
-                            <i class="fa-solid fa-robot me-1"></i> AI กำลังอ่านข้อมูลจากบิล...
-                        </p>
+                        <div class="spinner-border text-primary mb-2" role="status"><span class="visually-hidden">Loading...</span></div>
+                        <p class="text-muted small animate-pulse"><i class="fa-solid fa-robot me-1"></i> AI กำลังจำแนกประเภทบิลและอ่านข้อมูล...</p>
                     </div>
 
                     <div id="ocrResult" class="mt-3 p-3 bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded-3" style="display: none;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <small class="text-muted d-block mb-1" id="ocrStatusText"><i class="fa-solid fa-check-circle text-success me-1"></i>อ่านข้อมูลสำเร็จ</small>
-                                <h3 class="fw-bold text-primary mb-0" id="ocrValueText">0.00 kWh</h3>
+                                <small class="text-muted d-block mb-1" id="ocrStatusText">อ่านข้อมูลสำเร็จ</small>
+                                <h3 class="fw-bold text-primary mb-0" id="ocrValueText">0.00 Unit</h3>
                             </div>
-                            <button type="button" id="applyDataBtn" class="btn btn-primary shadow-sm">
-                                <i class="fa-solid fa-arrow-down me-2"></i>นำข้อมูลไปใช้
-                            </button>
+                            <button type="button" id="applyDataBtn" class="btn btn-primary shadow-sm"><i class="fa-solid fa-arrow-down me-2"></i>ใช้ข้อมูลนี้</button>
                         </div>
                     </div>
-
                 </div>
             </div>
 
             <div class="col-lg-7">
                 <div class="upload-card">
                     <h5 class="fw-bold mb-4"><i class="fa-solid fa-pen-to-square text-success me-2"></i>2. ตรวจสอบและบันทึก</h5>
-                    
                     <form>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted">ประเภทกิจกรรม (Activity)</label>
+                                <label class="form-label fw-bold small text-muted">ประเภทกิจกรรม</label>
                                 <select class="form-select" id="activityType">
-                                    <option value="elec" selected>⚡ การใช้ไฟฟ้า (Scope 2)</option>
+                                    <option value="elec">⚡ การใช้ไฟฟ้า (Scope 2)</option>
                                     <option value="water">💧 น้ำประปา</option>
-                                    <option value="paper">📄 กระดาษ A4</option>
-                                    <option value="fuel">⛽ น้ำมันเชื้อเพลิง</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted">ประจำเดือน (Month)</label>
-                                <input type="month" class="form-control" value="2024-01">
+                                <label class="form-label fw-bold small text-muted">ประจำเดือน</label>
+                                <input type="month" class="form-control" value="2024-04">
                             </div>
 
-                            <div class="col-12">
-                                <hr class="my-1 border-light">
-                            </div>
+                            <div class="col-12"><hr class="my-1 border-light"></div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small text-muted">ปริมาณการใช้ (Consumption)</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control fw-bold" id="consumptionInput" placeholder="0.00">
-                                    <span class="input-group-text bg-white text-muted" id="unitLabel">kWh</span>
+                                    <span class="input-group-text bg-white text-muted" id="unitLabel">Unit</span>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small text-muted">Emission Factor (EF)</label>
-                                <input type="text" class="form-control bg-light" value="0.4999" readonly>
-                                <small class="text-muted" style="font-size: 0.7rem;">อ้างอิง TGO 2023</small>
+                                <label class="form-label fw-bold small text-muted">Emission Factor</label>
+                                <input type="text" class="form-control bg-light" id="efInput" value="0.4999" readonly>
                             </div>
 
                             <div class="col-12 mt-4">
                                 <div class="p-3 bg-success bg-opacity-10 rounded border border-success border-opacity-25 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <small class="text-success text-uppercase fw-bold d-block">Total Carbon Footprint</small>
-                                        <small class="text-muted">ปริมาณคาร์บอนที่ปล่อย</small>
-                                    </div>
+                                    <div><small class="text-success fw-bold d-block">Total Carbon Footprint</small></div>
                                     <div class="text-end">
                                         <h2 class="mb-0 fw-bold text-success" id="totalCarbon">0.00</h2>
                                         <span class="text-success small fw-bold">kgCO2e</span>
@@ -252,106 +177,131 @@
                 </div>
             </div>
         </div>
-
-        <div class="card border-0 shadow-sm mt-4">
-            <div class="card-header bg-white py-3">
-                <h6 class="mb-0 fw-bold">บันทึกล่าสุด</h6>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4">กิจกรรม</th>
-                            <th>ปริมาณ</th>
-                            <th>Emission (kgCO2e)</th>
-                            <th>หลักฐาน</th>
-                            <th>วันที่บันทึก</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="ps-4"><span class="badge bg-warning text-dark me-2">Scope 1</span> น้ำมันดีเซล</td>
-                            <td>50 ลิตร</td>
-                            <td>132.45</td>
-                            <td><a href="#" class="text-primary"><i class="fa-solid fa-paperclip"></i> slip.jpg</a></td>
-                            <td class="text-muted small">15 ม.ค. 67</td>
-                        </tr>
-                        <tr>
-                            <td class="ps-4"><span class="badge bg-primary me-2">Scope 2</span> ไฟฟ้า</td>
-                            <td>1,200 kWh</td>
-                            <td>599.88</td>
-                            <td><a href="#" class="text-primary"><i class="fa-solid fa-file-pdf"></i> bill_dec.pdf</a></td>
-                            <td class="text-muted small">10 ม.ค. 67</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        // ตัวแปรเชื่อมต่อกับหน้าจอ
         const fileInput = document.getElementById('fileInput');
         const ocrResult = document.getElementById('ocrResult');
         const ocrLoading = document.getElementById('ocrLoading');
         const consumptionInput = document.getElementById('consumptionInput');
         const applyDataBtn = document.getElementById('applyDataBtn');
         const uploadArea = document.getElementById('uploadArea');
-        
-        // ส่วนแสดงผลข้อความ
         const ocrStatusText = document.getElementById('ocrStatusText'); 
         const ocrValueText = document.getElementById('ocrValueText');
+        const activityType = document.getElementById('activityType');
+        const efInput = document.getElementById('efInput');
+        const unitLabel = document.getElementById('unitLabel');
 
-        // ฟังก์ชัน: เมื่อมีการเลือกไฟล์
         fileInput.addEventListener('change', async () => {
             const file = fileInput.files[0];
             if (!file) return;
 
-            // 1. เริ่มทำงาน: โชว์ Loading, ซ่อนผลลัพธ์เก่า
             ocrLoading.style.display = 'block';
             ocrResult.style.display = 'none';
-            uploadArea.style.opacity = '0.5'; // ทำให้พื้นที่ Upload ดูจางลง
+            uploadArea.style.opacity = '0.5';
             applyDataBtn.disabled = true;
 
             try {
-                // 2. สร้าง Worker ของ Tesseract (สมอง AI)
                 const worker = await Tesseract.createWorker('tha+eng');
-                
-                // 3. สั่งให้อ่านภาพ (Recognize)
                 const ret = await worker.recognize(file);
-                console.log("Raw Text:", ret.data.text); // Debug ดูข้อความที่อ่านได้
+                const text = ret.data.text;
+                console.log("OCR Text:", text);
 
-                // 4. กรองข้อมูล (Logic: หาตัวเลขที่มีทศนิยม 2 ตำแหน่ง)
-                const numberPattern = /[0-9,]+\.[0-9]{2}/g;
-                const foundNumbers = ret.data.text.match(numberPattern);
-                
-                // เลือกตัวเลขตัวแรกที่เจอ (ปรับ Logic ได้ตามความเหมาะสม)
-                let detectedValue = foundNumbers ? foundNumbers[0] : '0.00';
-                
-                // ลบลูกน้ำ (,) ออก
-                detectedValue = detectedValue.replace(/,/g, '');
+                let detectedValue = '0.00';
+                let detectedType = 'unknown';
 
-                // 5. แสดงผลลัพธ์
+                // --- LOGIC จำแนกประเภทบิล (Classification) ---
+                if (text.includes("ไฟฟ้า") || text.includes("PEA") || text.includes("MEA")) {
+                    detectedType = 'elec';
+                } else if (text.includes("ประปา") || text.includes("MWA") || text.includes("PWA")) {
+                    detectedType = 'water';
+                }
+
+                // --- LOGIC ดึงค่า (Extraction) ---
+                
+                if (detectedType === 'elec') {
+                    // สูตรบิลไฟ (PEA): หาเลข 3 ทศนิยมที่น้อยที่สุด (232.000)
+                    const peaUnitPattern = /[0-9,]+\.[0-9]{3}/g; 
+                    const foundUnits = text.match(peaUnitPattern);
+                    
+                    if (foundUnits) {
+                        const numbers = foundUnits.map(num => parseFloat(num.replace(/,/g, '')));
+                        const validNumbers = numbers.filter(n => n > 0);
+                        detectedValue = Math.min(...validNumbers).toFixed(3);
+                        ocrStatusText.innerHTML = `<i class="fa-solid fa-bolt text-warning me-1"></i>พบบิลค่าไฟ (PEA)`;
+                    }
+
+                } else if (detectedType === 'water') {
+                    // สูตรบิลน้ำ (MWA): หาความสัมพันธ์ A - B = C (เลขมาตร - เลขเดิม = ที่ใช้)
+                    // เช่น 555 - 536 = 19
+                    
+                    // หาตัวเลขจำนวนเต็มทั้งหมด (ไม่ต้องมีจุด)
+                    const integerPattern = /\b\d+\b/g;
+                    let integers = text.match(integerPattern);
+                    
+                    if (integers) {
+                        // แปลงเป็นตัวเลข และกรองพวกปี พ.ศ. หรือ ID ยาวๆ ออก
+                        let nums = integers.map(n => parseInt(n)).filter(n => n < 2000 && n > 0);
+                        
+                        // Sort จากมากไปน้อย
+                        nums.sort((a, b) => b - a);
+                        
+                        let foundMathMatch = false;
+                        
+                        // วนลูปหาคู่ที่ลบกันแล้วได้ผลลัพธ์ที่มีอยู่ในลิสต์
+                        // เช่น เจอ 555, 536 -> ลองเอา 555 - 536 = 19 -> เช็คว่ามีเลข 19 ในลิสต์ไหม?
+                        for (let i = 0; i < nums.length; i++) {
+                            for (let j = i + 1; j < nums.length; j++) {
+                                let diff = nums[i] - nums[j];
+                                // ถ้าผลต่าง (diff) มีอยู่ในลิสต์ตัวเลขที่อ่านได้ และ diff ไม่ใช่ 0
+                                if (nums.includes(diff) && diff > 0 && diff < 1000) {
+                                    detectedValue = diff.toString();
+                                    foundMathMatch = true;
+                                    break;
+                                }
+                            }
+                            if (foundMathMatch) break;
+                        }
+                        
+                        if (!foundMathMatch) {
+                            // ถ้าหาความสัมพันธ์ไม่เจอ ให้เดาว่าเลขที่น้อยที่สุด (ที่ดูเป็นไปได้) คือค่าน้ำ
+                            // กรองเลขที่เหมือนวันที่ (<=31) ออกไปก่อน ถ้ามีเลขอื่นให้เลือก
+                            let candidates = nums.filter(n => n > 31);
+                            if(candidates.length === 0) candidates = nums; // ถ้าไม่มีเลขใหญ่เลย ก็เอาเลขเล็ก
+                            detectedValue = Math.min(...candidates).toString();
+                        }
+                        
+                        ocrStatusText.innerHTML = `<i class="fa-solid fa-water text-info me-1"></i>พบบิลค่าน้ำ (ประปา)`;
+                    }
+                } else {
+                    // ถ้าไม่รู้ว่าเป็นบิลอะไร หาตัวเลขอะไรก็ได้มาโชว์ก่อน
+                    detectedValue = '0.00';
+                    ocrStatusText.innerText = 'ไม่มั่นใจประเภทบิล';
+                }
+
+                // แสดงผลลัพธ์
                 ocrLoading.style.display = 'none';
                 uploadArea.style.opacity = '1';
                 ocrResult.style.display = 'block';
                 
-                // อัปเดตข้อความบนหน้าจอ
-                ocrStatusText.innerHTML = `<i class="fa-solid fa-check-circle text-success me-1"></i>อ่านสำเร็จ! เจอ ${foundNumbers ? foundNumbers.length : 0} ค่า`;
-                ocrValueText.innerHTML = `<i class="fa-solid fa-bolt me-2"></i>${detectedValue} kWh`;
+                let unitText = detectedType === 'elec' ? 'kWh' : 'Unit (m3)';
+                ocrValueText.innerHTML = `<i class="fa-solid fa-circle-check me-2"></i>${detectedValue} ${unitText}`;
                 
-                // ปุ่มกดใช้ข้อมูล
                 applyDataBtn.disabled = false;
                 applyDataBtn.onclick = () => {
+                    // 1. เลือก Dropdown ให้ถูกประเภท
+                    activityType.value = detectedType === 'unknown' ? 'elec' : detectedType;
+                    
+                    // 2. เปลี่ยนหน่วยและ EF
+                    updateFactor();
+                    
+                    // 3. กรอกค่า
                     consumptionInput.value = detectedValue; 
                     
-                    // คำนวณคาร์บอน (คร่าวๆ)
-                    const ef = 0.4999;
-                    const total = (parseFloat(detectedValue) * ef).toFixed(2);
-                    document.getElementById('totalCarbon').innerText = total;
+                    // 4. คำนวณ
+                    calculateCarbon();
 
-                    alert(`นำค่า ${detectedValue} kWh ไปกรอกเรียบร้อย!`);
+                    alert(`นำค่า ${detectedValue} ${unitText} ไปกรอกเรียบร้อย!`);
                 };
 
                 await worker.terminate(); 
@@ -364,23 +314,37 @@
             }
         });
 
-        // ทำให้ Drag & Drop มีลูกเล่นสี
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '#f0fdf4';
-            uploadArea.style.borderColor = '#198754';
+        // ฟังก์ชันอัปเดต EF ตามประเภทกิจกรรม
+        function updateFactor() {
+            if (activityType.value === 'elec') {
+                efInput.value = '0.4999';
+                unitLabel.innerText = 'kWh';
+            } else if (activityType.value === 'water') {
+                efInput.value = '0.3400'; // ค่าสมมติสำหรับน้ำประปา
+                unitLabel.innerText = 'm3';
+            }
+        }
+
+        // ฟังก์ชันคำนวณคาร์บอน
+        function calculateCarbon() {
+            const val = parseFloat(consumptionInput.value) || 0;
+            const ef = parseFloat(efInput.value) || 0;
+            const total = (val * ef).toFixed(2);
+            document.getElementById('totalCarbon').innerText = total;
+        }
+
+        // Event Listener เมื่อเปลี่ยน Dropdown เอง
+        activityType.addEventListener('change', () => {
+            updateFactor();
+            calculateCarbon();
         });
-        uploadArea.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            uploadArea.style.backgroundColor = '#f8fafc';
-            uploadArea.style.borderColor = '#cbd5e1';
-        });
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileInput.files = e.dataTransfer.files;
-            fileInput.dispatchEvent(new Event('change')); 
-            uploadArea.style.backgroundColor = '#f8fafc';
-        });
+
+        consumptionInput.addEventListener('input', calculateCarbon);
+
+        // Drag & Drop
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.backgroundColor = '#f0fdf4'; uploadArea.style.borderColor = '#198754'; });
+        uploadArea.addEventListener('dragleave', (e) => { e.preventDefault(); uploadArea.style.backgroundColor = '#f8fafc'; uploadArea.style.borderColor = '#cbd5e1'; });
+        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); uploadArea.style.backgroundColor = '#f8fafc'; });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
