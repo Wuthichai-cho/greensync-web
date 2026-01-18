@@ -123,119 +123,167 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   // ... (ส่วน HTML เหมือนเดิม) ...
+
     <script>
-        // 1. รอ OpenCV โหลดเสร็จ
-        let cvReady = false;
-        function onOpenCvReady() {
-            cvReady = true;
-            document.getElementById('cvStatus').innerText = "OpenCV พร้อมใช้งาน";
-            document.getElementById('cvStatus').className = "float-end badge bg-success";
-        }
-
         const fileInput = document.getElementById('fileInput');
-        const imgElement = document.getElementById('imageSrc');
-        const canvas = document.getElementById('canvasOutput');
-        const rawTextDisplay = document.getElementById('rawTextDisplay');
-        
-        fileInput.addEventListener('change', (e) => {
-            if (!cvReady) { alert("รอ OpenCV สักครู่ครับ..."); return; }
-            
-            // โหลดภาพเข้า <img> tag ก่อน
-            imgElement.src = URL.createObjectURL(e.target.files[0]);
-        });
+        const ocrResult = document.getElementById('ocrResult');
+        const ocrLoading = document.getElementById('ocrLoading');
+        const consumptionInput = document.getElementById('consumptionInput');
+        const applyDataBtn = document.getElementById('applyDataBtn');
+        const uploadArea = document.getElementById('uploadArea');
+        const ocrStatusText = document.getElementById('ocrStatusText'); 
+        const ocrValueText = document.getElementById('ocrValueText');
+        const activityType = document.getElementById('activityType');
+        const efInput = document.getElementById('efInput');
+        const unitLabel = document.getElementById('unitLabel');
+        const totalCarbonDisplay = document.getElementById('totalCarbon');
 
-        imgElement.onload = async function() {
-            document.getElementById('ocrLoading').style.display = 'block';
-            document.getElementById('ocrResult').style.display = 'none';
+        fileInput.addEventListener('change', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
 
-            // --- STEP 1: PRE-PROCESSING (แต่งภาพด้วย OpenCV) ---
-            let src = cv.imread(imgElement);
-            let dst = new cv.Mat();
-            
-            // 1.1 เปลี่ยนเป็นขาวดำ (Grayscale)
-            cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
-            
-            // 1.2 เร่งความคมชัด (Thresholding) -> ทำให้ตัวหนังสือดำปี๋ พื้นหลังขาวจั๊วะ
-            // ใช้ Adaptive Threshold แก้ปัญหาแสงเงาไม่เท่ากัน
-            cv.adaptiveThreshold(src, dst, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2);
-            
-            // 1.3 โชว์ภาพที่แต่งแล้วบน Canvas
-            cv.imshow('canvasOutput', dst);
-            canvas.style.display = 'block'; // โชว์ให้ User เห็น
-            
-            // คืนหน่วยความจำ
-            src.delete(); dst.delete();
+            // 1. Loading UI
+            ocrLoading.style.display = 'block';
+            ocrResult.style.display = 'none';
+            uploadArea.style.opacity = '0.5';
 
-            // --- STEP 2: OCR (อ่านภาพจาก Canvas ที่แต่งแล้ว) ---
             try {
+                // 2. เรียก Tesseract อ่าน (ใช้ tha+eng)
                 const worker = await Tesseract.createWorker('tha+eng');
-                
-                // ส่ง Canvas ที่แต่งแล้วไปให้อ่าน (ไม่ใช่ไฟล์ดิบ)
-                const ret = await worker.recognize(canvas); 
+                const ret = await worker.recognize(file);
                 const text = ret.data.text;
+                console.log("OCR Raw Text:", text); // Debug ดูว่าอ่านอะไรมาบ้าง
+
+                // --- SMART LOGIC V.4 (แก้ปัญหาอ่านตัวแรก) ---
                 
-                console.log("OCR Result:", text);
-                rawTextDisplay.innerText = text;
+                let detectedValue = '0.00';
+                let detectedType = 'elec'; // Default เป็นไฟ
+                let foundCandidate = false;
 
-                // --- STEP 3: LOGIC การแกะค่า (เหมือนเดิมแต่แม่นขึ้น) ---
-                processText(text);
+                // A. แยกประเภทบิลจาก Keyword
+                if (text.includes('ประปา') || text.includes('MWA') || text.includes('PWA') || text.includes('น้ำ')) {
+                    detectedType = 'water';
+                }
 
-                document.getElementById('ocrLoading').style.display = 'none';
-                document.getElementById('ocrResult').style.display = 'block';
-                await worker.terminate();
+                // B. ดึงตัวเลขทั้งหมดออกมา (ทำความสะอาดก่อน)
+                // Regex นี้จะจับทั้ง 1,234.56 และ 1234
+                const allNumbers = text.match(/[0-9,]+(\.[0-9]+)?/g);
+                
+                if (allNumbers) {
+                    // แปลงเป็น Float และกรองขยะออก
+                    let nums = allNumbers.map(n => parseFloat(n.replace(/,/g, '')))
+                        .filter(n => {
+                            // กรองเลขที่ไม่น่าใช่หน่วยการใช้
+                            return !isNaN(n) && 
+                                   n > 0 && 
+                                   n < 100000 && // เลขหลักแสนมักไม่ใช่หน่วยใช้ต่อเดือน
+                                   n !== 2566 && n !== 2567 && n !== 2023 && n !== 2024 && n !== 2025; // กรองปี
+                        });
 
-            } catch (err) {
-                console.error(err);
-                alert("เกิดข้อผิดพลาดในการอ่าน");
-                document.getElementById('ocrLoading').style.display = 'none';
-            }
-        };
+                    // เรียงจากมากไปน้อย (เพื่อช่วยสูตรลบเลข)
+                    nums.sort((a, b) => b - a);
+                    console.log("Cleaned Numbers:", nums);
 
-        function processText(text) {
-            let val = '0.00';
-            let type = 'elec';
-            
-            // Logic เดิม (แต่ข้อมูล Input สะอาดขึ้นมาก)
-            if(text.includes('ประปา') || text.includes('MWA')) type = 'water';
+                    // C. สูตร "The Perfect Match" (มิเตอร์ปัจจุบัน - มิเตอร์ก่อนหน้า = หน่วยที่ใช้)
+                    // วนลูปจับคู่ทุกตัวเลข
+                    for (let i = 0; i < nums.length; i++) {
+                        for (let j = i + 1; j < nums.length; j++) {
+                            let diff = nums[i] - nums[j];
+                            // เช็คว่าผลต่าง (diff) มีอยู่ในรายการตัวเลขที่เราอ่านได้ไหม?
+                            // ยอมให้คลาดเคลื่อนได้นิดหน่อย 0.01 (เผื่อทศนิยมเพี้ยน)
+                            let match = nums.find(n => Math.abs(n - diff) < 0.02);
+                            
+                            if (match) {
+                                console.log(`Found Formula: ${nums[i]} - ${nums[j]} = ${match}`);
+                                detectedValue = match.toString();
+                                foundCandidate = true;
+                                break; // เจอแล้วหยุดเลย! นี่คือคำตอบที่ถูกต้องที่สุด
+                            }
+                        }
+                        if (foundCandidate) break;
+                    }
 
-            const decimal3 = text.match(/[0-9,]+\.[0-9]{3}/g); // หาเลข 3 ทศนิยม (ไฟ)
-            const integers = text.match(/\b\d+\b/g); // หาเลขจำนวนเต็ม (น้ำ)
-
-            if (type === 'elec' && decimal3) {
-                // หาตัวเลขที่ > 0 และน้อยที่สุด
-                let nums = decimal3.map(n => parseFloat(n.replace(/,/g,''))).filter(n=>n>0);
-                if(nums.length > 0) val = Math.min(...nums).toFixed(3);
-            } 
-            else if (type === 'water' && integers) {
-                // สูตร A - B = C
-                let nums = integers.map(n => parseInt(n)).filter(n => n > 0 && n < 10000);
-                nums.sort((a,b)=>b-a);
-                let found = false;
-                for(let i=0; i<nums.length; i++) {
-                    for(let j=i+1; j<nums.length; j++) {
-                        let diff = nums[i] - nums[j];
-                        if(nums.includes(diff) && diff > 0 && diff < 500) {
-                            val = diff; found = true; break;
+                    // D. ถ้าสูตรคำนวณหาไม่เจอ (Fallback) -> ใช้ Heuristic เลือกตัวเลขที่ "เหมาะสมที่สุด"
+                    if (!foundCandidate && nums.length > 0) {
+                        console.log("Math formula failed, using heuristic...");
+                        
+                        if (detectedType === 'elec') {
+                            // ไฟฟ้า: มักจะเป็นเลขที่มีทศนิยม 2-3 ตำแหน่ง และค่าน้อยกว่าเลขมิเตอร์ (หลักพัน)
+                            // เราจะหาเลขที่น้อยที่สุด ในกลุ่มเลขที่ดูสมเหตุสมผล (เช่น < 1000)
+                            // หรือถ้าไม่มี ก็เอาเลขน้อยที่สุดที่เจอ
+                            let candidates = nums.filter(n => n < 2000); 
+                            if(candidates.length === 0) candidates = nums;
+                            detectedValue = Math.min(...candidates).toString();
+                        } else {
+                            // ประปา: มักจะเป็นเลขจำนวนเต็ม และค่าน้อย (เช่น 10-50 หน่วย)
+                            let candidates = nums.filter(n => Number.isInteger(n) && n < 200);
+                            if (candidates.length > 0) {
+                                detectedValue = Math.min(...candidates).toString();
+                            } else {
+                                // ถ้าไม่มีจำนวนเต็ม เอาเลขน้อยสุด
+                                detectedValue = Math.min(...nums).toString();
+                            }
                         }
                     }
-                    if(found) break;
                 }
-                if(!found && nums.length > 0) {
-                     // fallback ค่าน้ำ (เอาเลขน้อยๆ)
-                     let candidates = nums.filter(n=>n<200);
-                     if(candidates.length>0) val = candidates[0];
-                }
-            }
 
-            // Update UI
-            document.getElementById('ocrValueText').innerText = val + (type==='water'?' m3':' kWh');
-            document.getElementById('activityType').value = type;
-            
-            document.getElementById('applyDataBtn').onclick = () => {
-                document.getElementById('consumptionInput').value = val;
-                // คำนวณ EF...
-            };
+                // --- แสดงผล ---
+                ocrLoading.style.display = 'none';
+                uploadArea.style.opacity = '1';
+                ocrResult.style.display = 'block';
+
+                let unit = detectedType === 'water' ? 'm3' : 'kWh';
+                let icon = detectedType === 'water' ? 'fa-water' : 'fa-bolt';
+                let typeName = detectedType === 'water' ? 'ประปา' : 'ไฟฟ้า';
+
+                ocrStatusText.innerHTML = `<i class="fa-solid ${icon} me-1"></i>พบบิล${typeName}`;
+                ocrValueText.innerText = `${parseFloat(detectedValue).toFixed(2)} ${unit}`;
+                
+                // ตั้งค่าปุ่มกด
+                applyDataBtn.onclick = () => {
+                    activityType.value = detectedType;
+                    updateFactor(); // เรียกฟังก์ชันเปลี่ยนหน่วย/EF
+                    consumptionInput.value = parseFloat(detectedValue).toFixed(2);
+                    calculateCarbon(); // คำนวณคาร์บอน
+                };
+
+                await worker.terminate();
+
+            } catch (error) {
+                console.error(error);
+                ocrLoading.style.display = 'none';
+                uploadArea.style.opacity = '1';
+                alert("เกิดข้อผิดพลาด: " + error.message);
+            }
+        });
+
+        // ฟังก์ชันช่วย
+        function updateFactor() {
+            if(activityType.value === 'water') {
+                efInput.value = '0.3400';
+                unitLabel.innerText = 'm3';
+            } else {
+                efInput.value = '0.4999';
+                unitLabel.innerText = 'kWh';
+            }
         }
+
+        function calculateCarbon() {
+            const val = parseFloat(consumptionInput.value) || 0;
+            const ef = parseFloat(efInput.value) || 0;
+            totalCarbonDisplay.innerText = (val * ef).toFixed(2);
+        }
+
+        // Event Listeners อื่นๆ คงเดิม...
+        consumptionInput.addEventListener('input', calculateCarbon);
+        activityType.addEventListener('change', () => { updateFactor(); calculateCarbon(); });
+        // Drag & Drop listeners... (ใส่เหมือนเดิม)
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.backgroundColor = '#f0fdf4'; uploadArea.style.borderColor = '#198754'; });
+        uploadArea.addEventListener('dragleave', (e) => { e.preventDefault(); uploadArea.style.backgroundColor = '#f8fafc'; uploadArea.style.borderColor = '#cbd5e1'; });
+        uploadArea.addEventListener('drop', (e) => { e.preventDefault(); fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); uploadArea.style.backgroundColor = '#f8fafc'; });
+
     </script>
 </body>
 </html>
+
