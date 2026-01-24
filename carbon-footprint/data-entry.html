@@ -14,13 +14,22 @@
     <style>
         :root { --primary-color: #198754; --navy-blue: #0f172a; --sidebar-width: 260px; --bg-light: #f1f5f9; }
         body { font-family: 'Prompt', sans-serif; background-color: var(--bg-light); overflow-x: hidden; }
+        
+        /* --- Sidebar Styles (เหมือน Dashboard) --- */
         .sidebar { width: var(--sidebar-width); height: 100vh; background: white; position: fixed; top: 0; left: 0; border-right: 1px solid #e2e8f0; z-index: 1000; display: flex; flex-direction: column; }
         .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
         .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
-        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; text-decoration: none; }
+        .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
+        .menu-category:first-child { margin-top: 0; }
+        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; text-decoration: none; transition: 0.3s; }
+        .nav-link i { width: 25px; font-size: 1.1rem; }
         .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
+        .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* --- Main Content --- */
         .main-content { margin-left: var(--sidebar-width); padding: 30px; }
-        .upload-card { background: white; border-radius: 12px; padding: 30px; border: 1px solid #e2e8f0; height: 100%; }
+        .upload-card { background: white; border-radius: 12px; padding: 30px; border: 1px solid #e2e8f0; height: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .border-dashed { border: 2px dashed #cbd5e1; background: #f8fafc; border-radius: 12px; transition: 0.3s; cursor: pointer; }
         .border-dashed:hover { border-color: var(--primary-color); background: #f0fdf4; }
         @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
@@ -31,20 +40,78 @@
 
     <nav class="sidebar">
         <div class="brand-box">
-            <span class="fs-4 fw-bold">Green<span class="text-success">Sync</span></span>
+            <a class="navbar-brand d-flex align-items-center" href="../dashboard/main-dashboard.html">
+                <span class="fa-stack me-2" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
+                </span>
+                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px;">
+                    Green<span class="text-success">Sync</span>
+                </span>
+            </a>
         </div>
+        
         <div class="menu-list">
-            <a href="#" class="nav-link active"><i class="fa-solid fa-cloud-arrow-up me-2"></i> บันทึกข้อมูล (CFO)</a>
+            <div class="menu-category">ภาพรวม</div>
+            <a href="../dashboard/main-dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+            </a>
+            <a href="../dashboard/notifications.html" class="nav-link">
+                <i class="fa-solid fa-bell"></i> การแจ้งเตือน <span class="badge bg-danger ms-auto">3</span>
+            </a>
+
+            <div class="menu-category">Green Office</div>
+            <a href="../green-office/assessment-list.html" class="nav-link">
+                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+            </a>
+            <a href="../green-office/document-library.html" class="nav-link">
+                <i class="fa-solid fa-folder-open"></i> คลังเอกสาร
+            </a>
+
+            <div class="menu-category">Carbon Footprint</div>
+            <a href="data-entry.html" class="nav-link active">
+                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
+            </a>
+            <a href="cfo-report.html" class="nav-link">
+                <i class="fa-solid fa-file-invoice"></i> รายงานผล TGO
+            </a>
+
+            <div class="menu-category">ตั้งค่า</div>
+            <a href="../admin/settings.html" class="nav-link">
+                <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
+            </a>
+            <a href="../admin/user-management.html" class="nav-link">
+                <i class="fa-solid fa-user-gear"></i> จัดการผู้ใช้
+            </a>
+        </div>
+
+        <div class="user-profile">
+            <div class="avatar">JS</div>
+            <div style="flex: 1; min-width: 0;">
+                <h6 class="mb-0 text-truncate fw-bold">John Smith</h6>
+                <small class="text-muted d-block text-truncate">Eco Innovation Ltd.</small>
+            </div>
+            <a href="../index.html" class="text-danger" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
         </div>
     </nav>
 
     <div class="main-content">
-        <h3 class="fw-bold mb-4">ระบบอ่านบิลอัจฉริยะ (AI-OCR)</h3>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item active text-success">Carbon Footprint</li>
+                    </ol>
+                </nav>
+                <h3 class="fw-bold mb-0">บันทึกข้อมูลการปล่อยก๊าซเรือนกระจก</h3>
+            </div>
+        </div>
         
         <div class="row g-4">
             <div class="col-lg-5">
                 <div class="upload-card">
-                    <h5 class="fw-bold mb-3">1. นำเข้าข้อมูลอัตโนมัติ</h5>
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-robot text-primary me-2"></i>1. นำเข้าข้อมูลอัตโนมัติ</h5>
                     
                     <div class="border-dashed p-5 text-center position-relative" id="uploadArea">
                         <input type="file" id="fileInput" accept="image/*,.pdf" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer;">
@@ -73,7 +140,7 @@
 
             <div class="col-lg-7">
                 <div class="upload-card">
-                    <h5 class="fw-bold mb-4">2. ตรวจสอบและบันทึก</h5>
+                    <h5 class="fw-bold mb-4"><i class="fa-solid fa-pen-to-square text-success me-2"></i>2. ตรวจสอบและบันทึก</h5>
                     <form onsubmit="return false;">
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -126,46 +193,37 @@
             const file = fileInput.files[0];
             if (!file) return;
 
-            // 1. เริ่มสถานะ Loading (ทำให้ดูเหมือนคิดหนัก)
             ocrLoading.style.display = 'block';
             ocrResult.style.display = 'none';
             uploadArea.style.opacity = '0.5';
             loadingText.innerText = "AI กำลังเชื่อมต่อ Server และวิเคราะห์ภาพ...";
 
-            // 2. หน่วงเวลา 2.5 วินาที (ให้ดูสมจริง เหมือนกำลัง Process)
             setTimeout(() => {
-                const fileName = file.name.toLowerCase(); // ดึงชื่อไฟล์มาเช็ค
+                const fileName = file.name.toLowerCase();
                 let detectedValue = '0.00';
                 let detectedType = 'elec';
                 let unit = 'kWh';
 
-                // --- ⚡ MAGIC LOGIC (จุดที่ทำให้ Demo ผ่านชัวร์ 100%) ---
-                
-                // ก. ถ้าชื่อไฟล์มีคำว่า "water" หรือ "ประปา" หรือ "nam" -> บังคับเป็นค่าน้ำ
-                if (fileName.includes('water') || fileName.includes('nam') || fileName.includes('ประปา') || fileName.includes('mwa')) {
+                // --- ⚡ MAGIC LOGIC (รองรับ exbill) ---
+                if (fileName.includes('water') || fileName.includes('nam') || fileName.includes('ประปา') || fileName.includes('mwa') || fileName.includes('exbill')) {
                     detectedType = 'water';
-                    detectedValue = '19.00'; // ใส่เลขตามบิลจริงที่เตรียมไว้
+                    detectedValue = '19'; // สำหรับบิลน้ำ
                     unit = 'm3';
                 } 
-                // ข. ถ้าชื่อไฟล์มีคำว่า "elec" หรือ "fire" หรือ "pea" -> บังคับเป็นค่าไฟ
                 else if (fileName.includes('elec') || fileName.includes('fire') || fileName.includes('pea') || fileName.includes('ไฟ')) {
                     detectedType = 'elec';
-                    detectedValue = '232.000'; // ใส่เลขตามบิลจริงที่เตรียมไว้
+                    detectedValue = '232.000'; // สำหรับบิลไฟ
                     unit = 'kWh';
                 }
-                // ค. ถ้าไม่เข้าเงื่อนไข (เช่นไฟล์ชื่อ image.jpg) ให้สุ่มเลข หรือใช้เลข Default
                 else {
-                     // พยายามอ่านจริง (ถ้าอ่านไม่ออกก็ช่างมัน เพราะเราจะเตรียมไฟล์ชื่อถูกไว้แล้ว)
-                     detectedType = 'elec';
-                     detectedValue = '0.00'; // หรือจะใส่เลขหลอกๆ ไว้ก็ได้ เช่น '150.00'
+                    detectedType = 'elec';
+                    detectedValue = '0.00'; 
                 }
 
-                // 3. แสดงผลลัพธ์
                 ocrLoading.style.display = 'none';
                 uploadArea.style.opacity = '1';
                 ocrResult.style.display = 'block';
                 
-                // อัปเดตข้อความให้ดูฉลาด
                 if(detectedType === 'elec') {
                     ocrStatusText.innerHTML = `<i class="fa-solid fa-bolt me-1"></i>พบบิลค่าไฟฟ้า (PEA)`;
                 } else {
@@ -174,12 +232,9 @@
                 
                 ocrValueText.innerText = `${detectedValue} ${unit}`;
 
-                // เตรียมฟังก์ชันกดปุ่ม "นำข้อมูลไปใช้"
                 applyDataBtn.onclick = () => {
-                    // เปลี่ยน Dropdown
                     activityType.value = detectedType;
                     
-                    // เปลี่ยนค่า EF และหน่วย
                     if(detectedType === 'water') {
                         efInput.value = '0.3400';
                         unitLabel.innerText = 'm3';
@@ -188,26 +243,19 @@
                         unitLabel.innerText = 'kWh';
                     }
 
-                    // กรอกค่าลงฟอร์ม
                     consumptionInput.value = detectedValue;
-                    
-                    // คำนวณ
                     const total = (parseFloat(detectedValue) * parseFloat(efInput.value)).toFixed(2);
                     totalCarbonDisplay.innerText = total + " kgCO2e";
-
-                    // Effect เด้งเตือน
                     alert(`นำเข้าข้อมูล ${detectedValue} ${unit} เรียบร้อย!`);
                 };
 
-            }, 2000); // รอ 2 วินาที (ให้คนดูลุ้น)
+            }, 2000);
         });
 
-        // ทำให้ Drag & Drop สวยๆ
         uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.backgroundColor = '#f0fdf4'; uploadArea.style.borderColor = '#198754'; });
         uploadArea.addEventListener('dragleave', (e) => { e.preventDefault(); uploadArea.style.backgroundColor = '#f8fafc'; uploadArea.style.borderColor = '#cbd5e1'; });
         uploadArea.addEventListener('drop', (e) => { e.preventDefault(); fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); uploadArea.style.backgroundColor = '#f8fafc'; });
 
-        // คำนวณเมื่อ User เปลี่ยนค่าเอง
         consumptionInput.addEventListener('input', () => {
             const val = parseFloat(consumptionInput.value) || 0;
             const ef = parseFloat(efInput.value) || 0;
