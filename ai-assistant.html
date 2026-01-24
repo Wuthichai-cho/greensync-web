@@ -43,15 +43,6 @@
             border-bottom: 1px solid #e2e8f0;
         }
 
-        .brand-link {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--navy-blue);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
         .menu-list {
             padding: 20px 10px;
             flex: 1;
@@ -84,15 +75,15 @@
             text-decoration: none;
         }
 
-        .nav-link i {
-            width: 25px;
-            font-size: 1.1rem;
-        }
-
         .nav-link:hover,
         .nav-link.active {
             background-color: #f0fdf4;
             color: var(--primary-color);
+        }
+
+        .nav-link i {
+            width: 25px;
+            font-size: 1.1rem;
         }
 
         .user-profile {
@@ -119,7 +110,7 @@
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 30px;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
         }
 
         /* --- Category Tabs --- */
@@ -137,6 +128,7 @@
             border: none;
             border-bottom: 3px solid transparent;
             padding: 10px 20px;
+            cursor: pointer;
         }
 
         .nav-tabs .nav-link:hover {
@@ -150,13 +142,14 @@
             font-weight: 600;
         }
 
-        /* --- Criteria Card --- */
+        /* --- Form Container --- */
         .form-container {
             background: white;
             border: 1px solid #e2e8f0;
             border-top: none;
             border-radius: 0 0 12px 12px;
             padding: 30px;
+            min-height: 500px;
         }
 
         .criteria-item {
@@ -184,6 +177,20 @@
             width: 80px;
             text-align: center;
             font-weight: bold;
+        }
+
+        .tab-content-area {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content-area.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- AI Floating Button --- */
@@ -253,7 +260,6 @@
             border-radius: 12px;
             max-width: 80%;
             font-size: 0.9rem;
-            position: relative;
         }
 
         .chat-user {
@@ -278,38 +284,22 @@
             display: flex;
             gap: 10px;
         }
-
-        /* Typing Indicator */
-        .typing-indicator span {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background-color: #94a3b8;
-            border-radius: 50%;
-            animation: typing 1s infinite ease-in-out both;
-            margin: 0 1px;
+        
+        .upload-area {
+            background-color: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: #f0fdf4;
         }
 
-        .typing-indicator span:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @keyframes typing {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
-            }
-
-            40% {
-                transform: scale(1);
-            }
-        }
     </style>
 </head>
 
@@ -317,7 +307,7 @@
 
     <nav class="sidebar">
         <div class="brand-box">
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="../dashboard/main-dashboard.html">
                 <span class="fa-stack me-2" style="font-size: 1.2rem;">
                     <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
                     <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
@@ -337,6 +327,9 @@
             <div class="menu-category">Green Office</div>
             <a href="assessment-list.html" class="nav-link active">
                 <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+            </a>
+            <a href="document-library.html" class="nav-link">
+                <i class="fa-solid fa-folder-open"></i> คลังเอกสาร
             </a>
 
             <div class="menu-category">Carbon Footprint</div>
@@ -369,15 +362,12 @@
             <div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1 small">
-                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html"
-                                class="text-decoration-none text-muted">หน้าหลัก</a></li>
-                        <li class="breadcrumb-item"><a href="assessment-list.html"
-                                class="text-decoration-none text-muted">รายการประเมิน</a></li>
-                        <li class="breadcrumb-item active text-success">ปีงบประมาณ 2025</li>
+                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+                        <li class="breadcrumb-item active text-success">ประเมินสำนักงาน</li>
                     </ol>
                 </nav>
                 <div class="d-flex align-items-center gap-3">
-                    <h3 class="fw-bold mb-0">แบบประเมินสำนักงานสีเขียว</h3>
+                    <h3 class="fw-bold mb-0">แบบประเมินสำนักงานสีเขียว (Green Office)</h3>
                     <span class="badge bg-warning text-dark"><i class="fa-solid fa-pen"></i> Draft</span>
                 </div>
             </div>
@@ -402,89 +392,448 @@
 
         <div class="category-tabs">
             <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link active" href="#">หมวดที่ 1: นโยบาย</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 2: การสื่อสาร</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 3: หมวดสำนักงาน</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 4: พลังงาน</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 5: อากาศ/น้ำ</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">หมวดที่ 6: จัดซื้อ</a></li>
+                <li class="nav-item"><a class="nav-link active" onclick="switchTab(1)">1: นโยบาย</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab(2)">2: การสื่อสาร</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab(3)">3: ทรัพยากร</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab(4)">4: ของเสีย</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab(5)">5: สภาพแวดล้อม</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="switchTab(6)">6: จัดซื้อ</a></li>
             </ul>
         </div>
 
         <div class="form-container">
-            <h5 class="fw-bold mb-4">หมวดที่ 1: การกำหนดนโยบาย การวางแผนการดำเนินงาน และการปรับปรุงอย่างต่อเนื่อง</h5>
-
-            <div class="criteria-item">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <span class="criteria-code">1.1</span>
-                        <span class="fw-bold">การกำหนดนโยบายสิ่งแวดล้อม</span>
-                        <p class="text-muted small mt-1 mb-0 w-75">ต้องมีการกำหนดนโยบายที่ครอบคลุมการจัดการสิ่งแวดล้อม
-                            และมีการลงนามโดยผู้บริหารสูงสุด</p>
-                    </div>
-                    <div class="text-end">
-                        <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
-                        <input type="number" class="form-control score-input d-inline-block" value="5" max="5" min="0">
-                    </div>
-                </div>
-
-                <div class="bg-light p-3 rounded border border-dashed">
-                    <div class="d-flex align-items-center justify-content-between">
+            
+            <div id="cat-1" class="tab-content-area active">
+                <h5 class="fw-bold mb-4 text-success">หมวดที่ 1: การกำหนดนโยบาย การวางแผนการดำเนินงาน และการปรับปรุงอย่างต่อเนื่อง</h5>
+                
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <small class="fw-bold text-dark"><i class="fa-solid fa-paperclip me-1"></i>
-                                หลักฐานแนบ:</small>
-                            <div class="mt-2 d-flex gap-2">
-                                <span class="badge bg-white text-dark border"><i
-                                        class="fa-regular fa-file-pdf text-danger"></i> Policy_2025.pdf <i
-                                        class="fa-solid fa-xmark ms-2 text-muted" style="cursor:pointer"></i></span>
-                            </div>
+                            <span class="criteria-code">1.1</span>
+                            <span class="fw-bold">การกำหนดนโยบายสิ่งแวดล้อม</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">ต้องมีบริบทองค์กร ขอบเขต นโยบายที่ลงนามโดยผู้บริหาร และแผนการดำเนินงานประจำปี</p>
                         </div>
-                        <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-upload me-1"></i>
-                            อัปโหลดเพิ่ม</button>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 20</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="20">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>ลากไฟล์มาวาง หรือ คลิกเพื่ออัปโหลด (PDF, JPG)</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">1.2</span>
+                            <span class="fw-bold">คณะทำงานด้านสิ่งแวดล้อม</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">มีคำสั่งแต่งตั้งคณะทำงานที่ชัดเจน และคณะทำงานมีความเข้าใจในบทบาทหน้าที่</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบคำสั่งแต่งตั้งคณะทำงาน</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">1.3</span>
+                            <span class="fw-bold">การระบุประเด็นปัญหาทรัพยากรและสิ่งแวดล้อม</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">ระบุกิจกรรม ประเมินปัญหาสิ่งแวดล้อม (Aspects) และคัดเลือกปัญหานัยสำคัญ (Significant)</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 20</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="20">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบตารางวิเคราะห์ Aspects</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">1.4</span>
+                            <span class="fw-bold">กฎหมายและข้อกำหนดอื่นๆ</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">รวบรวมกฎหมายที่เกี่ยวข้อง และประเมินความสอดคล้อง</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบทะเบียนกฎหมาย</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">1.5</span>
+                            <span class="fw-bold">ข้อมูลก๊าซเรือนกระจก (GHG)</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">เก็บข้อมูลการใช้ทรัพยากร คำนวณ Carbon Footprint และวิเคราะห์ผลเทียบเป้าหมาย</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 20</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="20">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบรายงาน CFO (Carbon Footprint for Organization)</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">1.6</span>
+                            <span class="fw-bold">แผนงานโครงการสิ่งแวดล้อม</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">มีโครงการเพื่อลดผลกระทบสิ่งแวดล้อม และติดตามผลความสำเร็จ</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบรายละเอียดโครงการ</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">1.7</span>
+                            <span class="fw-bold">การตรวจประเมินภายใน (Internal Audit)</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">มีคำสั่งแต่งตั้งผู้ตรวจประเมินภายใน และรายงานผลการตรวจประเมิน</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบรายงาน Internal Audit</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">1.8</span>
+                            <span class="fw-bold">การทบทวนฝ่ายบริหาร (Management Review)</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">ประชุมทบทวนโดยผู้บริหารสูงสุด ครบตามวาระที่กำหนด</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบรายงานการประชุมฝ่ายบริหาร</small>
                     </div>
                 </div>
             </div>
 
-            <div class="criteria-item">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <span class="criteria-code">1.2</span>
-                        <span class="fw-bold">การสื่อสารนโยบายแก่พนักงาน</span>
-                        <p class="text-muted small mt-1 mb-0 w-75">ต้องมีการประกาศนโยบายให้พนักงานทราบผ่านช่องทางต่างๆ
-                            เช่น เสียงตามสาย, บอร์ดประชาสัมพันธ์, Email</p>
+            <div id="cat-2" class="tab-content-area">
+                <h5 class="fw-bold mb-4 text-success">หมวดที่ 2: การสื่อสารและสร้างจิตสำนึก</h5>
+                
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">2.1</span>
+                            <span class="fw-bold">การอบรมให้ความรู้และประเมินความเข้าใจ</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">แผนการอบรม, หลักฐานการอบรม (ภาพถ่าย/ใบเซ็นชื่อ), และการประเมินผลความเข้าใจ</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
                     </div>
-                    <div class="text-end">
-                        <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
-                        <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5"
-                            min="0">
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบแผนการอบรม / บันทึกการอบรม</small>
                     </div>
                 </div>
 
-                <div class="bg-light p-3 rounded border border-dashed text-center">
-                    <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-plus me-1"></i>
-                        อัปโหลดไฟล์หลักฐาน</button>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">รองรับ PDF, JPG ไม่เกิน
-                        5MB</small>
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">2.2</span>
+                            <span class="fw-bold">การรณรงค์และประชาสัมพันธ์</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">สื่อสารนโยบาย/ผลการดำเนินงาน ผ่านบอร์ด, เสียงตามสาย, ออนไลน์ และรับฟังความคิดเห็น</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบภาพถ่ายบอร์ดประชาสัมพันธ์ / ตัวอย่างสื่อ</small>
+                    </div>
                 </div>
             </div>
 
-            <div class="criteria-item">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <span class="criteria-code">1.3</span>
-                        <span class="fw-bold">คณะทำงานด้านสิ่งแวดล้อม</span>
-                        <p class="text-muted small mt-1 mb-0 w-75">มีคำสั่งแต่งตั้งคณะทำงานที่ชัดเจน
-                            และมีการประชุมอย่างน้อยปีละ 2 ครั้ง</p>
+            <div id="cat-3" class="tab-content-area">
+                <h5 class="fw-bold mb-4 text-success">หมวดที่ 3: การใช้ทรัพยากรและพลังงาน</h5>
+                
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">3.1</span>
+                            <span class="fw-bold">การใช้น้ำ</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">มาตรการประหยัดน้ำ, กราฟเปรียบเทียบการใช้น้ำ, การบำรุงรักษาอุปกรณ์</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
                     </div>
-                    <div class="text-end">
-                        <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
-                        <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5"
-                            min="0">
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบมาตรการ / สถิติการใช้น้ำ</small>
                     </div>
                 </div>
-                <div class="bg-light p-3 rounded border border-dashed text-center">
-                    <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-plus me-1"></i>
-                        อัปโหลดไฟล์หลักฐาน</button>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">3.2</span>
+                            <span class="fw-bold">การใช้พลังงาน (ไฟฟ้า/น้ำมันเชื้อเพลิง)</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">มาตรการประหยัดไฟ, การกำหนดเวลาเปิด-ปิด, การดูแลบำรุงรักษาเครื่องปรับอากาศ</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบมาตรการ / สถิติการใช้ไฟฟ้า</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">3.3</span>
+                            <span class="fw-bold">การใช้ทรัพยากรอื่นๆ (กระดาษ/หมึก/อุปกรณ์)</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การใช้กระดาษ 2 หน้า, การใช้ E-document, มาตรการลดการเบิกจ่าย</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบสถิติการใช้กระดาษ</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">3.4</span>
+                            <span class="fw-bold">การประชุมและการจัดนิทรรศการ</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">Green Meeting, การใช้วัสดุธรรมชาติ, การงดใช้โฟม/พลาสติก</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบภาพถ่ายการจัดประชุมแบบ Green</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cat-4" class="tab-content-area">
+                <h5 class="fw-bold mb-4 text-success">หมวดที่ 4: การจัดการของเสีย</h5>
+                
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">4.1</span>
+                            <span class="fw-bold">การจัดการของเสีย (ขยะ)</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การคัดแยกขยะ (4 ประเภท), จุดพักขยะถูกสุขลักษณะ, การส่งกำจัดถูกต้อง</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบภาพถ่ายจุดแยกขยะ / ใบเสร็จการขายขยะ</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">4.2</span>
+                            <span class="fw-bold">การจัดการน้ำเสีย</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การติดตั้งถังดักไขมัน, การตรวจสอบคุณภาพน้ำทิ้ง, การดูแลระบบบำบัด</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบผลตรวจคุณภาพน้ำ / ภาพถ่ายถังดักไขมัน</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cat-5" class="tab-content-area">
+                <h5 class="fw-bold mb-4 text-success">หมวดที่ 5: สภาพแวดล้อมและความปลอดภัย</h5>
+                
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">5.1</span>
+                            <span class="fw-bold">อากาศในสำนักงาน</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การจัดการมลพิษทางอากาศ, การทำความสะอาด, เขตห้ามสูบบุหรี่</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบตารางทำความสะอาด / ภาพถ่าย</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">5.2</span>
+                            <span class="fw-bold">แสงสว่าง</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การตรวจวัดความเข้มแสงสว่างให้เป็นไปตามกฎหมาย</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบรายงานการตรวจวัดแสง</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">5.3</span>
+                            <span class="fw-bold">เสียง</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การควบคุมระดับเสียงรบกวนในสำนักงาน</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">5.4</span>
+                            <span class="fw-bold">ความน่าอยู่ (5ส.)</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">ความเป็นระเบียบเรียบร้อย, พื้นที่สีเขียว, การจัดการสัตว์พาหะ</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบภาพถ่ายพื้นที่สีเขียว / แผน 5ส.</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">5.5</span>
+                            <span class="fw-bold">การเตรียมพร้อมต่อสภาวะฉุกเฉิน</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">แผนฉุกเฉิน, การซ้อมหนีไฟ, การตรวจสอบถังดับเพลิง/สัญญาณเตือนภัย</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบรายงานการซ้อมหนีไฟ / ใบเช็คถังดับเพลิง</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cat-6" class="tab-content-area">
+                <h5 class="fw-bold mb-4 text-success">หมวดที่ 6: การจัดซื้อและจัดจ้าง</h5>
+                
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">6.1</span>
+                            <span class="fw-bold">การจัดซื้อสินค้า</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การเลือกซื้อสินค้าที่เป็นมิตรกับสิ่งแวดล้อม (ฉลากเขียว/เบอร์ 5), บัญชีรายชื่อสินค้า</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 10</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="10">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบรายการสินค้า Green Product</small>
+                    </div>
+                </div>
+
+                <div class="criteria-item">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="criteria-code">6.2</span>
+                            <span class="fw-bold">การจัดจ้างหน่วยงาน</span>
+                            <p class="text-muted small mt-1 mb-0 w-75">การคัดเลือกผู้รับจ้าง (แม่บ้าน/รปภ.) ที่ใส่ใจสิ่งแวดล้อม, การควบคุมผู้รับเหมา</p>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block mb-1">คะแนนเต็ม 5</small>
+                            <input type="number" class="form-control score-input d-inline-block" placeholder="0" max="5">
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i>
+                        <br><small>แนบสัญญาจ้าง / หลักฐานการอบรมแม่บ้าน</small>
+                    </div>
                 </div>
             </div>
 
@@ -511,13 +860,30 @@
         </div>
 
         <div class="chat-footer">
-            <input type="text" class="form-control" id="chatInput"
-                placeholder="พิมพ์คำถาม... (เช่น ข้อ 1.2 ใช้อะไรแนบ)">
+            <input type="text" class="form-control" id="chatInput" placeholder="พิมพ์คำถาม... (เช่น ข้อ 1.2 ใช้อะไรแนบ)">
             <button class="btn btn-primary" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
     <script>
+        // --- 1. Tab Switching Logic ---
+        function switchTab(catIndex) {
+            // 1. Remove active class from all links
+            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            // 2. Add active class to clicked link
+            document.querySelectorAll('.nav-tabs .nav-link')[catIndex - 1].classList.add('active');
+
+            // 3. Hide all content areas
+            document.querySelectorAll('.tab-content-area').forEach(content => {
+                content.classList.remove('active');
+            });
+            // 4. Show the selected content
+            document.getElementById(`cat-${catIndex}`).classList.add('active');
+        }
+
+        // --- 2. AI Chat Logic (เดิม) ---
         const aiBtn = document.getElementById('aiBtn');
         const chatWindow = document.getElementById('chatWindow');
         const closeChat = document.getElementById('closeChat');
@@ -525,7 +891,6 @@
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        // 1. เปิด/ปิด Chat Window
         aiBtn.addEventListener('click', () => {
             chatWindow.style.display = (chatWindow.style.display === 'flex') ? 'none' : 'flex';
         });
@@ -534,19 +899,12 @@
             chatWindow.style.display = 'none';
         });
 
-        // 2. ฟังก์ชันส่งข้อความ
         function sendMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
-
-            // ฝั่ง User: สร้าง Bubble ข้อความ
             addMessage('user', text);
             chatInput.value = '';
-
-            // AI: แสดงสถานะกำลังพิมพ์...
             const loadingId = addLoading();
-
-            // AI: ตอบกลับ (Delay 1 วินาที ให้ดูสมจริง)
             setTimeout(() => {
                 removeLoading(loadingId);
                 const response = getAIResponse(text);
@@ -554,16 +912,14 @@
             }, 1000);
         }
 
-        // Helper: เพิ่ม Bubble ลงหน้าจอ
         function addMessage(role, text) {
             const bubble = document.createElement('div');
             bubble.className = `chat-bubble chat-${role}`;
             bubble.innerHTML = text;
             chatBody.appendChild(bubble);
-            chatBody.scrollTop = chatBody.scrollHeight; // เลื่อนลงล่างสุด
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
 
-        // Helper: แสดงจุด Loading
         function addLoading() {
             const id = 'loading-' + Date.now();
             const bubble = document.createElement('div');
@@ -575,33 +931,28 @@
             return id;
         }
 
-        // Helper: ลบจุด Loading
         function removeLoading(id) {
             const el = document.getElementById(id);
             if (el) el.remove();
         }
 
-        // Logic: AI สมองกล (Mockup)
         function getAIResponse(input) {
             input = input.toLowerCase();
-
             if (input.includes('1.1') || input.includes('นโยบาย')) {
                 return "<strong>เกณฑ์ 1.1 (นโยบายสิ่งแวดล้อม)</strong> ต้องแนบ:<br>1. ประกาศนโยบายฉบับจริง (มีลายเซ็น)<br>2. ภาพถ่ายการติดประกาศในพื้นที่ต่างๆ";
             }
-            if (input.includes('1.2') || input.includes('สื่อสาร')) {
-                return "<strong>เกณฑ์ 1.2 (การสื่อสาร)</strong> แนะนำให้ใช้ช่องทางหลากหลายครับ เช่น:<br>- เสียงตามสาย<br>- อีเมลแจ้งพนักงาน<br>- บอร์ดประชาสัมพันธ์<br><em>(ต้องมีรูปถ่ายเป็นหลักฐานนะครับ)</em>";
+            if (input.includes('1.2') || input.includes('คณะทำงาน')) {
+                return "<strong>เกณฑ์ 1.2 (คณะทำงาน)</strong> ต้องมี:<br>1. คำสั่งแต่งตั้งคณะทำงาน (ลงนามโดยผู้บริหาร)<br>2. รายงานการประชุมคณะทำงาน (อย่างน้อยปีละ 2 ครั้ง)";
             }
-            if (input.includes('1.3') || input.includes('คณะทำงาน')) {
-                return "<strong>เกณฑ์ 1.3 (คณะทำงาน)</strong> ต้องมี:<br>1. คำสั่งแต่งตั้งคณะทำงาน (ลงนามโดยผู้บริหาร)<br>2. รายงานการประชุมคณะทำงาน (อย่างน้อยปีละ 2 ครั้ง)";
+            if (input.includes('1.5') || input.includes('ghg') || input.includes('ก๊าซเรือนกระจก')) {
+                return "<strong>เกณฑ์ 1.5 (CFO)</strong> ต้องเก็บข้อมูล:<br>- ไฟฟ้า (kWh)<br>- น้ำประปา (m3)<br>- กระดาษ (ream/kg)<br>- การเดินทาง (km/liter)<br>แล้วนำมาคำนวณ Carbon Footprint ครับ";
             }
             if (input.includes('สวัสดี') || input.includes('hi')) {
                 return "สวัสดีครับ! วันนี้จะเริ่มประเมินหมวดไหนดีครับ? 😊";
             }
-
-            return "ขอโทษครับ ผมยังไม่เข้าใจคำถาม ลองระบุเลขข้อ (เช่น 1.1, 1.2) ดูนะครับ";
+            return "ผมกำลังเรียนรู้ข้อมูลเพิ่มเติมครับ ลองถามเกี่ยวกับเกณฑ์ข้ออื่นๆ ได้เลยนะครับ";
         }
 
-        // Event Listeners
         sendBtn.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
