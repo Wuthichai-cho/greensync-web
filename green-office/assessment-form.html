@@ -1,356 +1,566 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบฟอร์มประเมิน 6 หมวด | GreenSync</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>แบบฟอร์มประเมิน | GreenSync</title>
 
-    <style>
-        :root {
-            --primary-color: #198754;
-            --navy-blue: #0f172a;
-            --sidebar-width: 260px;
-            --bg-light: #f1f5f9;
-        }
+  <!-- CSS libs -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: var(--bg-light);
-            overflow-x: hidden;
-        }
+  <style>
+    :root{
+      --primary-color:#198754;
+      --navy-blue:#0f172a;
+      --sidebar-width:260px;
+      --bg-light:#f1f5f9;
+    }
+    body{font-family:'Prompt',sans-serif;background-color:var(--bg-light);overflow-x:hidden;}
+    /* Sidebar */
+    .sidebar{width:var(--sidebar-width);height:100vh;background:#fff;position:fixed;top:0;left:0;border-right:1px solid #e2e8f0;z-index:1000;display:flex;flex-direction:column;}
+    .brand-box{padding:20px;border-bottom:1px solid #e2e8f0;}
+    .menu-list{padding:20px 10px;flex:1;overflow-y:auto;}
+    .menu-category{font-size:.75rem;text-transform:uppercase;color:#94a3b8;font-weight:700;padding:0 15px;margin-bottom:10px;margin-top:20px;}
+    .menu-category:first-child{margin-top:0;}
+    .nav-link{color:#64748b;font-weight:500;padding:12px 15px;border-radius:8px;margin-bottom:5px;display:flex;align-items:center;transition:.3s;text-decoration:none;}
+    .nav-link:hover,.nav-link.active{background:#f0fdf4;color:var(--primary-color);}
+    .nav-link i{width:25px;font-size:1.1rem;}
+    .user-profile{padding:15px;border-top:1px solid #e2e8f0;display:flex;align-items:center;gap:10px;}
+    .avatar{width:40px;height:40px;background:var(--navy-blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;}
 
-        /* --- Sidebar --- */
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: white;
-            position: fixed;
-            top: 0; left: 0;
-            border-right: 1px solid #e2e8f0;
-            z-index: 1000;
-            display: flex; flex-direction: column;
-        }
+    /* Main */
+    .main-content{margin-left:var(--sidebar-width);padding:30px;padding-bottom:100px;}
 
-        .brand-box { padding: 20px; border-bottom: 1px solid #e2e8f0; }
-        .brand-link { font-size: 1.4rem; font-weight: 700; color: var(--navy-blue); text-decoration: none; display: flex; align-items: center; }
-        .menu-list { padding: 20px 10px; flex: 1; overflow-y: auto; }
-        .menu-category { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; padding: 0 15px; margin-bottom: 10px; margin-top: 20px; }
-        .menu-category:first-child { margin-top: 0; }
-        .nav-link { color: #64748b; font-weight: 500; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; display: flex; align-items: center; transition: 0.3s; text-decoration: none; }
-        .nav-link:hover, .nav-link.active { background-color: #f0fdf4; color: var(--primary-color); }
-        .user-profile { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; background-color: var(--navy-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    /* Tabs */
+    .category-tabs{background:#fff;padding:15px 15px 0;border-radius:12px 12px 0 0;border:1px solid #e2e8f0;border-bottom:none;}
+    .nav-tabs .nav-link{color:#64748b;font-weight:500;border:none;border-bottom:3px solid transparent;padding:10px 20px;cursor:pointer;}
+    .nav-tabs .nav-link:hover{color:var(--primary-color);}
+    .nav-tabs .nav-link.active{color:var(--primary-color);background:transparent;border-bottom-color:var(--primary-color);font-weight:600;}
 
-        /* --- Main Content --- */
-        .main-content { margin-left: var(--sidebar-width); padding: 30px; padding-bottom: 80px; }
+    /* Form */
+    .form-container{background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;padding:30px;min-height:500px;}
+    .criteria-item{border-bottom:1px solid #f1f5f9;padding-bottom:25px;margin-bottom:25px;}
+    .criteria-item:last-child{border-bottom:none;margin-bottom:0;}
+    .criteria-code{background:#f0fdf4;color:var(--primary-color);padding:4px 8px;border-radius:6px;font-weight:700;font-size:.9rem;margin-right:10px;}
+    .score-input{width:90px;text-align:center;font-weight:bold;}
+    .tab-content-area{display:none;animation:fadeIn .3s ease-in-out;}
+    .tab-content-area.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-        /* --- Tabs --- */
-        .category-tabs {
-            background: white;
-            padding: 15px 15px 0 15px;
-            border-radius: 12px 12px 0 0;
-            border: 1px solid #e2e8f0;
-            border-bottom: none;
-        }
-        .nav-tabs .nav-link { color: #64748b; font-weight: 500; border: none; border-bottom: 3px solid transparent; padding: 10px 20px; cursor: pointer; }
-        .nav-tabs .nav-link:hover { color: var(--primary-color); }
-        .nav-tabs .nav-link.active { color: var(--primary-color); background: transparent; border-bottom-color: var(--primary-color); font-weight: 600; }
+    /* Upload */
+    .upload-area{background:#f8f9fa;border:2px dashed #dee2e6;border-radius:8px;padding:15px;text-align:center;transition:all .3s;cursor:pointer;position:relative;}
+    .upload-area:hover{border-color:var(--primary-color);background:#f0fdf4;}
+    .upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+    .evidence-list{margin-top:8px;text-align:left;font-size:.85rem;color:#334155}
 
-        /* --- Form Container --- */
-        .form-container {
-            background: white; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px; padding: 30px;
-        }
-        .criteria-item { border-bottom: 1px solid #f1f5f9; padding-bottom: 25px; margin-bottom: 25px; }
-        .criteria-item:last-child { border-bottom: none; margin-bottom: 0; }
-        .criteria-code { background: #f0fdf4; color: var(--primary-color); padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; margin-right: 10px; }
-        .score-input { width: 80px; text-align: center; font-weight: bold; }
-
-        /* --- Chat AI --- */
-        .ai-fab {
-            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
-            background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4); cursor: pointer; transition: 0.3s; z-index: 1050; border: none;
-        }
-        .ai-fab:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6); }
-
-        .chat-window {
-            position: fixed; bottom: 100px; right: 30px; width: 350px; height: 500px;
-            background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            display: none; flex-direction: column; z-index: 1050; border: 1px solid #e2e8f0; overflow: hidden;
-        }
-        .chat-header { background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-body { flex: 1; padding: 15px; background: #f8fafc; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .chat-bubble { padding: 10px 15px; border-radius: 12px; max-width: 80%; font-size: 0.9rem; }
-        .chat-user { background: #e0f2fe; color: #0369a1; align-self: flex-end; }
-        .chat-ai { background: white; border: 1px solid #e2e8f0; align-self: flex-start; }
-        .chat-footer { padding: 10px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; }
-        .typing-indicator span { display: inline-block; width: 6px; height: 6px; background-color: #94a3b8; border-radius: 50%; animation: typing 1s infinite ease-in-out both; margin: 0 1px; }
-        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-    </style>
+    /* Floating AI */
+    .ai-fab{position:fixed;bottom:30px;right:30px;width:60px;height:60px;background:linear-gradient(135deg,#0d6efd,#0dcaf0);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 15px rgba(13,110,253,.4);cursor:pointer;transition:.3s;z-index:1050;border:none;}
+    .ai-fab:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(13,110,253,.6);}
+    .chat-window{position:fixed;bottom:100px;right:30px;width:350px;height:500px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15);display:none;flex-direction:column;z-index:1050;border:1px solid #e2e8f0;overflow:hidden;}
+    .chat-header{background:linear-gradient(135deg,#0d6efd,#0dcaf0);color:#fff;padding:15px;display:flex;align-items:center;justify-content:space-between;}
+    .chat-body{flex:1;padding:15px;background:#f8fafc;overflow-y:auto;display:flex;flex-direction:column;gap:15px;}
+    .chat-bubble{padding:10px 15px;border-radius:12px;max-width:80%;font-size:.9rem;}
+    .chat-user{background:#e0f2fe;color:#0369a1;align-self:flex-end;border-bottom-right-radius:2px;border:1px solid #bae6fd;}
+    .chat-ai{background:#fff;border:1px solid #e2e8f0;align-self:flex-start;border-bottom-left-radius:2px;}
+    .chat-footer{padding:10px;background:#fff;border-top:1px solid #e2e8f0;display:flex;gap:10px;}
+    .small-muted{font-size:.85rem;color:#64748b}
+    .badge-soft{background:#fff3cd;border:1px solid #ffe69c;color:#8a6d3b;}
+  </style>
 </head>
+
 <body>
-
-    <nav class="sidebar">
-        <div class="brand-box">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <span class="fa-stack me-2" style="font-size: 1.2rem;">
-                    <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
-                    <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform: scale(0.6);"></i>
-                </span>
-                <span style="font-family: 'Prompt', sans-serif; font-weight: 700; letter-spacing: -0.5px;">
-                    Green<span class="text-success">Sync</span>
-                </span>
-            </a>
-        </div>
-        <div class="menu-list">
-            <div class="menu-category">Green Office</div>
-            <a href="assessment-list.html" class="nav-link active">
-                <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
-            </a>
-            <div class="menu-category">Carbon Footprint</div>
-            <a href="../carbon-footprint/data-entry.html" class="nav-link">
-                <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
-            </a>
-            <a href="../carbon-footprint/cfo-report.html" class="nav-link">
-                <i class="fa-solid fa-file-invoice"></i> รายงานผล TGO
-            </a>
-        </div>
-        <div class="user-profile">
-            <div class="avatar">JS</div>
-            <div style="flex: 1;">
-                <h6 class="mb-0 text-truncate fw-bold">John Smith</h6>
-            </div>
-        </div>
-    </nav>
-
-    <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-1 small">
-                        <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
-                        <li class="breadcrumb-item active text-success">ปีงบประมาณ 2025</li>
-                    </ol>
-                </nav>
-                <div class="d-flex align-items-center gap-3">
-                    <h3 class="fw-bold mb-0">แบบประเมินสำนักงานสีเขียว</h3>
-                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-pen"></i> Draft</span>
-                </div>
-            </div>
-            <button class="btn btn-success"><i class="fa-solid fa-paper-plane me-2"></i>ส่งประเมิน</button>
-        </div>
-
-        <div class="category-tabs">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="cat1-tab" data-bs-toggle="tab" data-bs-target="#cat1" type="button" role="tab">หมวด 1: นโยบาย</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="cat2-tab" data-bs-toggle="tab" data-bs-target="#cat2" type="button" role="tab">หมวด 2: การสื่อสาร</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="cat3-tab" data-bs-toggle="tab" data-bs-target="#cat3" type="button" role="tab">หมวด 3: พลังงาน</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="cat4-tab" data-bs-toggle="tab" data-bs-target="#cat4" type="button" role="tab">หมวด 4: ของเสีย</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="cat5-tab" data-bs-toggle="tab" data-bs-target="#cat5" type="button" role="tab">หมวด 5: สภาพแวดล้อม</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="cat6-tab" data-bs-toggle="tab" data-bs-target="#cat6" type="button" role="tab">หมวด 6: จัดซื้อ</button>
-                </li>
-            </ul>
-        </div>
-
-        <div class="form-container">
-            <div class="tab-content" id="myTabContent">
-                
-                <div class="tab-pane fade show active" id="cat1" role="tabpanel">
-                    <h5 class="fw-bold mb-4">หมวดที่ 1: การกำหนดนโยบายและการวางแผน</h5>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">1.1</span> <strong>กำหนดนโยบายสิ่งแวดล้อม</strong></div>
-                            <input type="number" class="form-control score-input" value="5">
-                        </div>
-                        <div class="mt-2 text-muted small">ต้องมีนโยบายที่เป็นลายลักษณ์อักษร ลงนามโดยผู้บริหาร</div>
-                        <div class="bg-light p-2 mt-2 rounded border border-dashed"><small><i class="fa-solid fa-paperclip"></i> Attached: Policy_Signed.pdf</small></div>
-                    </div>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">1.2</span> <strong>คณะทำงานสิ่งแวดล้อม</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">มีคำสั่งแต่งตั้งคณะทำงานที่ชัดเจน</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="cat2" role="tabpanel">
-                    <h5 class="fw-bold mb-4">หมวดที่ 2: การสื่อสารและสร้างจิตสำนึก</h5>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">2.1</span> <strong>การอบรมพนักงาน</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">อบรมให้ความรู้เรื่อง Green Office อย่างน้อยปีละ 1 ครั้ง</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload Training Log</button>
-                    </div>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">2.2</span> <strong>การรณรงค์ประชาสัมพันธ์</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">มีบอร์ดประชาสัมพันธ์หรือเสียงตามสาย</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload Photos</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="cat3" role="tabpanel">
-                    <h5 class="fw-bold mb-4">หมวดที่ 3: การใช้ทรัพยากรและพลังงาน</h5>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">3.1</span> <strong>มาตรการประหยัดน้ำ</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">มีสติกเกอร์รณรงค์และตรวจสอบรอยรั่วไหล</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload Checklist</button>
-                    </div>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">3.2</span> <strong>มาตรการประหยัดไฟฟ้า</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">กำหนดเวลาเปิด-ปิดแอร์, ใช้หลอดไฟ LED</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload Photos</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="cat4" role="tabpanel">
-                    <h5 class="fw-bold mb-4">หมวดที่ 4: การจัดการของเสีย</h5>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">4.1</span> <strong>การแยกขยะ</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">มีถังขยะแยกสีชัดเจน (ทั่วไป, รีไซเคิล, อันตราย, อินทรีย์)</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload Photos</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="cat5" role="tabpanel">
-                    <h5 class="fw-bold mb-4">หมวดที่ 5: สภาพแวดล้อมและความปลอดภัย</h5>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">5.1</span> <strong>แสงสว่างและอากาศ</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">ตรวจวัดค่าแสงสว่างและคุณภาพอากาศประจำปี</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload Report</button>
-                    </div>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">5.2</span> <strong>ความสะอาดและความเป็นระเบียบ (5ส)</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload 5S Report</button>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="cat6" role="tabpanel">
-                    <h5 class="fw-bold mb-4">หมวดที่ 6: การจัดซื้อจัดจ้างสีเขียว</h5>
-                    <div class="criteria-item">
-                        <div class="d-flex justify-content-between">
-                            <div><span class="criteria-code">6.1</span> <strong>การเลือกซื้อสินค้าที่เป็นมิตรกับสิ่งแวดล้อม</strong></div>
-                            <input type="number" class="form-control score-input" placeholder="0">
-                        </div>
-                        <div class="mt-2 text-muted small">ซื้อสินค้าที่มีฉลากเขียว (Green Label) ไม่น้อยกว่า 30% ของมูลค่า</div>
-                        <button class="btn btn-sm btn-outline-secondary mt-2"><i class="fa-solid fa-upload"></i> Upload Invoice</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="brand-box">
+      <a class="navbar-brand d-flex align-items-center" href="../dashboard/main-dashboard.html">
+        <span class="fa-stack me-2" style="font-size:1.2rem;">
+          <i class="fa-solid fa-leaf fa-stack-2x text-success"></i>
+          <i class="fa-solid fa-rotate fa-stack-1x text-white" style="transform:scale(.6);"></i>
+        </span>
+        <span style="font-family:'Prompt',sans-serif;font-weight:700;letter-spacing:-.5px;">Green<span class="text-success">Sync</span></span>
+      </a>
     </div>
 
-    <button class="ai-fab" id="aiBtn"><i class="fa-solid fa-robot"></i></button>
-    <div class="chat-window" id="chatWindow">
-        <div class="chat-header">
-            <span><i class="fa-solid fa-robot me-2"></i>AI Assistant</span>
-            <button type="button" class="btn-close btn-close-white" id="closeChat"></button>
-        </div>
-        <div class="chat-body" id="chatBody">
-            <div class="chat-bubble chat-ai">สวัสดีครับ! เลือกถามเกณฑ์หมวดไหนได้เลยครับ 🌱</div>
-        </div>
-        <div class="chat-footer">
-            <input type="text" class="form-control" id="chatInput" placeholder="ถามเกี่ยวกับเกณฑ์...">
-            <button class="btn btn-primary" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
+    <div class="menu-list">
+      <div class="menu-category">ภาพรวม</div>
+      <a href="../dashboard/main-dashboard.html" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i> แดชบอร์ด
+      </a>
+
+      <div class="menu-category">Green Office</div>
+      <a href="assessment-list.html" class="nav-link active">
+        <i class="fa-solid fa-clipboard-check"></i> ประเมินสำนักงาน
+      </a>
+      <a href="document-library.html" class="nav-link">
+        <i class="fa-solid fa-folder-open"></i> คลังเอกสาร
+      </a>
+
+      <div class="menu-category">Carbon Footprint</div>
+      <a href="../carbon-footprint/data-entry.html" class="nav-link">
+        <i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูล (CFO)
+      </a>
+      <a href="../carbon-footprint/cfo-report.html" class="nav-link">
+        <i class="fa-solid fa-file-invoice"></i> รายงานผล TGO
+      </a>
+
+      <div class="menu-category">ตั้งค่า</div>
+      <a href="../admin/settings.html" class="nav-link">
+        <i class="fa-solid fa-building"></i> ข้อมูลองค์กร
+      </a>
     </div>
 
-    <script>
-        // Tab & Chat Script
-        const aiBtn = document.getElementById('aiBtn');
-        const chatWindow = document.getElementById('chatWindow');
-        const closeChat = document.getElementById('closeChat');
-        const chatBody = document.getElementById('chatBody');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
+    <div class="user-profile">
+      <div class="avatar">WK</div>
+      <div style="flex:1;min-width:0;">
+        <h6 class="mb-0 text-truncate fw-bold">วุฒิชัย ขุนราวุธ</h6>
+        <small class="text-muted">Green Office</small>
+      </div>
+      <a href="../index.html" class="text-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+    </div>
+  </nav>
 
-        aiBtn.addEventListener('click', () => chatWindow.style.display = (chatWindow.style.display === 'flex') ? 'none' : 'flex');
-        closeChat.addEventListener('click', () => chatWindow.style.display = 'none');
+  <!-- Main -->
+  <div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1 small">
+            <li class="breadcrumb-item"><a href="../dashboard/main-dashboard.html" class="text-decoration-none text-muted">หน้าหลัก</a></li>
+            <li class="breadcrumb-item active text-success">ประเมินสำนักงาน</li>
+          </ol>
+        </nav>
+        <div class="d-flex align-items-center gap-3">
+          <h3 class="fw-bold mb-0">แบบประเมินสำนักงานสีเขียว (Green Office)</h3>
+          <span id="draftBadge" class="badge badge-soft"><i class="fa-solid fa-pen"></i> Draft</span>
+        </div>
+        <div class="small-muted mt-2">
+          เกณฑ์ปี 2564: 6 หมวด / 23 ประเด็น / 63 ตัวชี้วัด / คะแนน 0–4 ต่อข้อ (รวมเต็ม 252) <!-- Reference to official structure -->
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" id="saveDraftBtn">บันทึกร่าง</button>
+        <button class="btn btn-success" id="submitBtn"><i class="fa-solid fa-paper-plane me-2"></i>ส่งประเมิน</button>
+      </div>
+    </div>
 
-        function sendMessage() {
-            const text = chatInput.value.trim();
-            if (!text) return;
-            addMessage('user', text);
-            chatInput.value = '';
-            
-            const loadingId = addLoading();
-            setTimeout(() => {
-                removeLoading(loadingId);
-                addMessage('ai', getAIResponse(text));
-            }, 800);
+    <!-- Progress card -->
+    <div class="alert alert-light border d-flex align-items-center mb-4 shadow-sm" role="alert">
+      <i class="fa-solid fa-chart-line text-success fs-4 me-3"></i>
+      <div class="flex-grow-1">
+        <div class="d-flex justify-content-between mb-1">
+          <span class="fw-bold text-dark small">ความคืบหน้าภาพรวม</span>
+          <span class="fw-bold text-success small"><span id="progressPercent">0</span>%</span>
+        </div>
+        <div class="progress" style="height:8px;">
+          <div class="progress-bar bg-success" id="progressBar" style="width:0%"></div>
+        </div>
+        <div class="d-flex justify-content-between small mt-2">
+          <span>ข้อที่ให้คะแนนแล้ว: <strong id="scoredCount">0</strong>/<span id="totalItems">63</span></span>
+          <span>คะแนนรวม: <strong id="totalScore">0</strong> / <span id="maxScore">252</span> (<strong id="scorePercent">0</strong>%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="category-tabs">
+      <ul class="nav nav-tabs" id="categoryTabs"></ul>
+    </div>
+
+    <!-- Form container -->
+    <div class="form-container" id="formContainer"></div>
+  </div>
+
+  <!-- AI FAB -->
+  <button class="ai-fab" id="aiBtn" title="ถาม AI ผู้ช่วย">
+    <i class="fa-solid fa-robot"></i>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-robot"></i> <strong>AI Green Consultant</strong>
+      </div>
+      <button type="button" class="btn-close btn-close-white" id="closeChat"></button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-bubble chat-ai">
+        สวัสดีครับ! 👋 ผมคือ AI ผู้ช่วยประจำ Green Office<br/>
+        อยากรู้ว่าข้อไหนต้องแนบอะไร หรืออยากให้ช่วยร่างนโยบาย–มาตรการ พิมพ์ถามได้เลยครับ
+      </div>
+    </div>
+    <div class="chat-footer">
+      <input type="text" class="form-control" id="chatInput" placeholder="พิมพ์คำถาม... (เช่น 1.4 ต้องใช้อะไรแนบ?)"/>
+      <button class="btn btn-primary" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- Data & Scripts -->
+  <script>
+    // -----------------------------
+    // 1) MASTER DATA: Green Office 2021 (2564) – 6 หมวด / 23 ประเด็น / 63 ตัวชี้วัด (คะแนนเต็มข้อละ 4)
+    // -----------------------------
+    const CRITERIA_DATA = [
+      {
+        cat: 1,
+        title: "หมวดที่ 1: นโยบาย แผน และการปรับปรุงอย่างต่อเนื่อง",
+        items: [
+          // 1.1 นโยบายสิ่งแวดล้อม (5)
+          {code:"1.1.1", name:"บริบทองค์กรและขอบเขตการจัดการสิ่งแวดล้อม", hint:"เอกสารระบุขอบเขตพื้นที่/กิจกรรม ลงนามอนุมัติ และทบทวนล่าสุด", max:4},
+          {code:"1.1.2", name:"นโยบายครอบคลุม 4 ประเด็นสำคัญ", hint:"ปรับปรุงต่อเนื่อง, ควบคุมผลกระทบ, ปฏิบัติตามกฎหมาย/เกณฑ์, สร้างจิตสำนึก", max:4},
+          {code:"1.1.3", name:"นโยบายประกาศโดยผู้บริหารสูงสุดและสื่อสาร", hint:"มีลายเซ็น/วันประกาศ/ช่องทางสื่อสาร/ติดตามผล", max:4},
+          {code:"1.1.4", name:"แผนดำเนินงานสำนักงานสีเขียวประจำปี", hint:"ครอบคลุมทุกหมวด ระบุความถี่ ขอบเขต ผู้รับผิดชอบ อนุมัติแล้ว", max:4},
+          {code:"1.1.5", name:"เป้าหมายและตัวชี้วัด 6 ด้าน", hint:"ไฟฟ้า น้ำมันเชื้อเพลิง น้ำ กระดาษ ของเสีย ก๊าซเรือนกระจก", max:4},
+
+          // 1.2 คณะทำงาน (2)
+          {code:"1.2.1", name:"แต่งตั้งคณะทำงานครบทุกหมวด", hint:"คำสั่งแต่งตั้ง ระบุบทบาทหน้าที่ ครอบคลุมทุกหมวด", max:4},
+          {code:"1.2.2", name:"ความเข้าใจบทบาทหน้าที่ของคณะทำงาน", hint:"ผลการสุ่มสัมภาษณ์ ≥ 4 คน ครบทุกหมวด", max:4},
+
+          // 1.3 ประเด็นสิ่งแวดล้อม (2)
+          {code:"1.3.1", name:"ระบุประเด็น/กิจกรรม/ปัญหานัยสำคัญ", hint:"ภาวะปกติ/ผิดปกติ/ฉุกเฉิน อ้างอิงกฎหมายที่เกี่ยวข้อง", max:4},
+          {code:"1.3.2", name:"มาตรการ/แนวทางควบคุมปัญหานัยสำคัญ", hint:"มีคู่มือ/มาตรการ/แนวทาง + ปฏิบัติจริง/อ้างอิงหมวดอื่น", max:4},
+
+          // 1.4 กฎหมายและข้อกำหนด (2)
+          {code:"1.4.1", name:"ทะเบียนกฎหมายและข้อกำหนดอื่น", hint:"แหล่งอ้างอิง/ความเกี่ยวข้อง/ทบทวนอย่างน้อยปีละครั้ง", max:4},
+          {code:"1.4.2", name:"ประเมินความสอดคล้องตามกฎหมาย", hint:"หลักฐานการปฏิบัติตาม/การแก้ไข/ความถี่ประเมิน ≥ ปีละครั้ง", max:4},
+
+          // 1.5 GHG (3)
+          {code:"1.5.1", name:"เก็บข้อมูลกิจกรรมปล่อยก๊าซเรือนกระจก", hint:"ไฟฟ้า เชื้อเพลิง น้ำ กระดาษ ของเสีย ใช้ EF ล่าสุดของ TGO", max:4},
+          {code:"1.5.2", name:"ผลเทียบเป้าหมายลดก๊าซเรือนกระจก", hint:"บรรลุ/ไม่บรรลุ พร้อมวิเคราะห์สาเหตุและแนวทางแก้ไข", max:4},
+          {code:"1.5.3", name:"ความเข้าใจของบุคลากรเรื่อง GHG", hint:"สุ่มถาม ≥4 คน: ความสำคัญ แนวทางลด ปริมาณเทียบเป้าหมาย", max:4},
+
+          // 1.6 โครงการ/CI (2)
+          {code:"1.6.1", name:"กำหนดวัตถุประสงค์และโครงการ/นวัตกรรม", hint:"สอดคล้องนโยบาย/กฎหมาย วัดผลได้ ผู้รับผิดชอบชัดเจน", max:4},
+          {code:"1.6.2", name:"ผลสำเร็จและการปรับปรุงอย่างต่อเนื่อง", hint:"ติดตามความก้าวหน้า สรุปผล ปรับปรุงและยั่งยืน", max:4},
+
+          // 1.7 Internal Audit (2)
+          {code:"1.7.1", name:"แต่งตั้ง/เตรียมความพร้อมผู้ตรวจประเมินภายใน", hint:"คำสั่งแต่งตั้ง/คุณสมบัติ/แผนตรวจ", max:4},
+          {code:"1.7.2", name:"รายงานตรวจภายในและการแก้ไข", hint:"รายงาน NC/CAR + ติดตามผล", max:4},
+
+          // 1.8 Management Review (2)
+          {code:"1.8.1", name:"ประชุมทบทวนฝ่ายบริหาร (MR) ครบวาระ", hint:"วาระครอบคลุมผลการดำเนินงาน/กฎหมาย/ทรัพยากร/เป้าหมาย", max:4},
+          {code:"1.8.2", name:"บันทึกการประชุมและการสั่งการปรับปรุง", hint:"มติ/มอบหมาย/กำหนดเวลาติดตาม", max:4},
+        ]
+      },
+      {
+        cat: 2,
+        title: "หมวดที่ 2: การสื่อสารและสร้างจิตสำนึก",
+        items: [
+          // 2.1 อบรม (3)
+          {code:"2.1.1", name:"แผนการอบรมความรู้ด้านสิ่งแวดล้อม", hint:"หัวข้อ/เป้าหมาย/กลุ่มเป้าหมาย/รอบจัด/ประเมินผล", max:4},
+          {code:"2.1.2", name:"ผู้รับผิดชอบหลักสูตร/วิทยากรเหมาะสม", hint:"คุณสมบัติ/ใบรับรอง/ประสบการณ์", max:4},
+          {code:"2.1.3", name:"ดำเนินการและประเมินผลหลังอบรม", hint:"หลักฐานภาพถ่าย/แบบประเมิน/สรุปผล", max:4},
+
+          // 2.2 สื่อสาร/รณรงค์ (4)
+          {code:"2.2.1", name:"แผนการสื่อสารและช่องทาง (≥9 หัวข้อ)", hint:"นโยบาย, กฎหมาย, 5ส, พลังงาน, ทรัพยากร, ของเสีย, GHG ฯลฯ", max:4},
+          {code:"2.2.2", name:"รณรงค์/สื่อสารตามแผน", hint:"บอร์ด/เสียงตามสาย/ออนไลน์/กิจกรรม", max:4},
+          {code:"2.2.3", name:"ความเข้าใจนโยบายของบุคลากร", hint:"สุ่มถาม ≥4 คน วัดร้อยละการเข้าใจ", max:4},
+          {code:"2.2.4", name:"ช่องทางรับข้อเสนอแนะ/ร้องเรียน", hint:"มีผู้รับผิดชอบ/สรุปรายงาน/ป้อนกลับผู้บริหาร", max:4},
+        ]
+      },
+      {
+        cat: 3,
+        title: "หมวดที่ 3: การใช้ทรัพยากรและพลังงาน",
+        items: [
+          // 3.1 น้ำ (3)
+          {code:"3.1.1", name:"มาตรการใช้น้ำอย่างเหมาะสม", hint:"สร้างจิตสำนึก/อุปกรณ์ประหยัด/ทบทวนรั่วซึม/นำน้ำกลับใช้", max:4},
+          {code:"3.1.2", name:"สถิติใช้น้ำต่อหน่วยเทียบเป้าหมาย", hint:"บันทึกรายเดือน/วิเคราะห์/เปรียบเทียบ/สรุปสาเหตุ", max:4},
+          {code:"3.1.3", name:"การปฏิบัติตามมาตรการน้ำ (สำรวจ)", hint:"อัตราการปฏิบัติตามในพื้นที่สุ่มตรวจ", max:4},
+
+          // 3.2 พลังงานไฟฟ้า (3)
+          {code:"3.2.1", name:"มาตรการใช้ไฟฟ้าอย่างเหมาะสม", hint:"กำหนดเวลาเปิด-ปิด/ตั้งค่า/พลังงานทดแทน/เปลี่ยนอุปกรณ์ประหยัด", max:4},
+          {code:"3.2.2", name:"สถิติใช้ไฟฟ้าต่อหน่วยเทียบเป้าหมาย", hint:"บันทึกรายเดือน/วิเคราะห์/เปรียบเทียบ/สรุปสาเหตุ", max:4},
+          {code:"3.2.3", name:"บำรุงรักษาเครื่องปรับอากาศ/ระบบ", hint:"ตารางล้าง/ซ่อม/ตรวจเช็ค พร้อมหลักฐาน", max:4},
+
+          // 3.3 ทรัพยากรอื่น (5)
+          {code:"3.3.1", name:"มาตรการใช้กระดาษ", hint:"2 หน้า/E-Document/กำหนดรูปแบบ/รี-ยูส", max:4},
+          {code:"3.3.2", name:"สถิติใช้กระดาษต่อหน่วยเทียบเป้าหมาย", hint:"รายเดือน/เทียบเป้า/บรรลุหรือไม่พร้อมวิเคราะห์", max:4},
+          {code:"3.3.3", name:"การปฏิบัติตามมาตรการกระดาษ", hint:"สำรวจหน่วยงาน/ร้อยละการปฏิบัติ", max:4},
+          {code:"3.3.4", name:"มาตรการใช้หมึกพิมพ์/อุปกรณ์สำนักงาน", hint:"กำหนดรูปแบบ/ใช้ซ้ำ/ควบคุมการเบิก/สื่ออิเล็กทรอนิกส์", max:4},
+          {code:"3.3.5", name:"การปฏิบัติตามมาตรการหมึก/อุปกรณ์", hint:"สำรวจพื้นที่/ร้อยละการปฏิบัติ", max:4},
+
+          // 3.4 การประชุม/นิทรรศการ (1)
+          {code:"3.4.1", name:"Green Meeting/Exhibition", hint:"แนวทาง/งดโฟม/ลดพลาสติก/หลักฐานภาพถ่าย", max:4},
+        ]
+      },
+      {
+        cat: 4,
+        title: "หมวดที่ 4: การจัดการของเสีย",
+        items: [
+          // 4.1 ขยะทั่วไป (4)
+          {code:"4.1.1", name:"ระบบคัดแยกขยะ (อย่างน้อย 4 ประเภท)", hint:"ภาชนะ/สื่อสัญลักษณ์/คู่มือ/จุดวางทั่วถึง", max:4},
+          {code:"4.1.2", name:"การนำกลับมาใช้ประโยชน์/รีไซเคิล", hint:"บันทึกรายเดือน/วิเคราะห์เทียบเป้าหมาย/แนวโน้มลด", max:4},
+          {code:"4.1.3", name:"จุดพักขยะถูกสุขลักษณะและการส่งกำจัด", hint:"สะอาด/ปิดมิดชิด/บันทึกส่งกำจัด/ใบรับ", max:4},
+          {code:"4.1.4", name:"ของเสียอันตราย/เฉพาะ (ถ้ามี)", hint:"มีภาชนะ/ป้าย/แยกเก็บ/ส่งกำจัดถูกต้อง", max:4},
+
+          // 4.2 น้ำเสีย (3)
+          {code:"4.2.1", name:"ติดตั้งและดูแลถังดักไขมัน (ถ้ามี)", hint:"ตำแหน่งเหมาะสม/ตารางทำความสะอาด", max:4},
+          {code:"4.2.2", name:"ตรวจวัดคุณภาพน้ำทิ้งตามกฎหมาย", hint:"ผลตรวจ/ผู้ตรวจที่ได้รับอนุญาต/ผ่านเกณฑ์", max:4},
+          {code:"4.2.3", name:"สรุปการปฏิบัติตามและการแก้ไข", hint:"รายงาน/การแก้ไขเมื่อเกินเกณฑ์", max:4},
+        ]
+      },
+      {
+        cat: 5,
+        title: "หมวดที่ 5: สภาพแวดล้อมและความปลอดภัย",
+        items: [
+          // 5.1 อากาศ
+          {code:"5.1.1", name:"การควบคุมมลพิษอากาศในสำนักงาน", hint:"แผนดูแลแหล่งกำเนิด, เขตปลอดบุหรี่, ตำแหน่งเครื่องพิมพ์ ฯลฯ", max:4},
+          {code:"5.1.2", name:"มาตรการช่วงก่อสร้าง/ปรับปรุง (ถ้ามี)", hint:"กั้นพื้นที่/ป้ายแจ้งเตือน/พื้นที่ทำงานสำรอง", max:4},
+
+          // 5.2 แสงสว่าง
+          {code:"5.2.1", name:"ตรวจวัดความเข้มแสงตามกฎหมาย", hint:"รายปี/เครื่องมือสอบเทียบ/ระดับถูกต้อง/ผู้ตรวจตามกฎหมาย", max:4},
+
+          // 5.3 เสียง
+          {code:"5.3.1", name:"ควบคุมระดับเสียงรบกวนในสำนักงาน", hint:"มาตรการควบคุม/ติดตามและแก้ไข", max:4},
+          {code:"5.3.2", name:"ควบคุมเสียงช่วงก่อสร้าง (ถ้ามี)", hint:"ป้ายเตือน/กำหนดเวลา/พื้นที่สำรอง", max:4},
+
+          // 5.4 ความน่าอยู่/5ส
+          {code:"5.4.1", name:"แผนจัดการความน่าอยู่และ 5ส", hint:"แผนผัง/หน้าที่/ความถี่/เพิ่มพื้นที่สีเขียว", max:4},
+          {code:"5.4.2", name:"ร้อยละการใช้สอยพื้นที่ตามวัตถุประสงค์", hint:"ผลสำรวจการใช้พื้นที่", max:4},
+          {code:"5.4.3", name:"ร้อยละการดูแลบำรุงรักษาพื้นที่", hint:"ตารางทำความสะอาด/หลักฐานการดำเนินการ", max:4},
+          {code:"5.4.4", name:"ควบคุมสัตว์พาหะนำโรค", hint:"แนวทางป้องกัน/ตรวจร่องรอย ≥ เดือนละครั้ง/ไม่พบร่องรอย", max:4},
+
+          // 5.5 ฉุกเฉิน
+          {code:"5.5.1", name:"อบรม/ซ้อมดับเพลิงและอพยพหนีไฟ", hint:"≥40% อบรมดับเพลิง + ซ้อมอพยพปีละครั้ง พร้อมหลักฐาน", max:4},
+          {code:"5.5.2", name:"ตรวจถังดับเพลิง/สัญญาณเตือนภัย", hint:"ใบเช็ค/ตารางตรวจ/แก้ไข", max:4},
+          {code:"5.5.3", name:"ป้าย จุดรวมพล และเส้นทางหนีไฟ", hint:"มีป้าย/สื่อสาร/ไม่กีดขวาง", max:4},
+        ]
+      },
+      {
+        cat: 6,
+        title: "หมวดที่ 6: การจัดซื้อและจัดจ้าง",
+        items: [
+          // 6.1 จัดซื้อ
+          {code:"6.1.1", name:"บัญชีรายการ Green Product", hint:"พิจารณาฉลากเขียว/ตะกร้าเขียว/เบอร์5/CFP/ฉลากอื่นที่ยอมรับ", max:4},
+          {code:"6.1.2", name:"ร้อยละการจัดซื้อสินค้าที่เป็นมิตรต่อสิ่งแวดล้อม", hint:"คำนวณจากปริมาณ/มูลค่า ≥40% ได้เต็ม", max:4},
+          {code:"6.1.3", name:"ร้อยละความครอบคลุมของวัสดุอุปกรณ์ที่ใช้จริง", hint:"สำรวจหน้างาน—พบสินค้า Green ตามบัญชี", max:4},
+
+          // 6.2 จัดจ้าง
+          {code:"6.2.1", name:"คัดเลือกผู้รับจ้างที่ใส่ใจสิ่งแวดล้อม", hint:"มีมาตรฐาน/มีการประเมินเบื้องต้น/แนวทางจัดการสิ่งแวดล้อม", max:4},
+          {code:"6.2.2", name:"ข้อกำหนดสิ่งแวดล้อมในสัญญาและการกำกับดูแล", hint:"บันทึกอบรม/ข้อตกลง/ตรวจติดตามผู้รับเหมา", max:4},
+        ]
+      },
+    ];
+
+    // -----------------------------
+    // 2) RENDERING
+    // -----------------------------
+    const totalItemsEl = document.getElementById("totalItems");
+    const maxScoreEl = document.getElementById("maxScore");
+    totalItemsEl.textContent = CRITERIA_DATA.reduce((sum, c)=> sum + c.items.length, 0);
+    maxScoreEl.textContent = CRITERIA_DATA.reduce((s, c)=> s + c.items.reduce((x,i)=> x + (i.max||4), 0), 0);
+
+    const tabsUl = document.getElementById("categoryTabs");
+    const formContainer = document.getElementById("formContainer");
+
+    function renderTabs(){
+      tabsUl.innerHTML = "";
+      CRITERIA_DATA.forEach((cat, idx)=>{
+        const li = document.createElement("li");
+        li.className = "nav-item";
+        li.innerHTML = `<a class="nav-link ${idx===0?'active':''}" data-cat="${cat.cat}" onclick="switchTab(${cat.cat})">${cat.cat}: ${cat.title.replace(/^หมวดที่ \\d+:\\s*/,'')}</a>`;
+        tabsUl.appendChild(li);
+      });
+    }
+
+    function renderCategory(catIndex){
+      formContainer.innerHTML = "";
+      const cat = CRITERIA_DATA.find(c=> c.cat === catIndex);
+      const wrapper = document.createElement("div");
+      wrapper.className = "tab-content-area active";
+      wrapper.innerHTML = `<h5 class="fw-bold mb-4 text-success">${cat.title}</h5>`;
+      cat.items.forEach((item, idx)=>{
+        const block = document.createElement("div");
+        block.className = "criteria-item";
+        block.dataset.code = item.code;
+        block.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="pe-3">
+              <span class="criteria-code">${item.code}</span>
+              <span class="fw-bold">${item.name}</span>
+              ${item.hint ? `<p class="text-muted small mt-1 mb-0">${item.hint}</p>` : ""}
+            </div>
+            <div class="text-end">
+              <small class="text-muted d-block mb-1">คะแนนเต็ม ${item.max || 4}</small>
+              <input type="number" class="form-control score-input d-inline-block" placeholder="0" min="0" max="${item.max || 4}" step="1" data-code="${item.code}"/>
+            </div>
+          </div>
+
+          <label class="upload-area">
+            <i class="fa-solid fa-cloud-arrow-up text-secondary fs-4 mb-2"></i><br/>
+            <small>ลากไฟล์มาวาง หรือ คลิกเพื่ออัปโหลด (PDF, JPG, PNG) ได้หลายไฟล์</small>
+            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" data-code="${item.code}"/>
+            <div class="evidence-list" id="ev-${item.code}"></div>
+          </label>
+        `;
+        wrapper.appendChild(block);
+      });
+      formContainer.appendChild(wrapper);
+    }
+
+    // Init default tab
+    function switchTab(catIndex){
+      document.querySelectorAll('.nav-tabs .nav-link').forEach(a=> a.classList.remove('active'));
+      const target = Array.from(document.querySelectorAll('.nav-tabs .nav-link')).find(a => +a.getAttribute('data-cat') === catIndex);
+      if(target) target.classList.add('active');
+      renderCategory(catIndex);
+      attachListeners();
+      recalcProgress();
+    }
+    window.switchTab = switchTab;
+
+    renderTabs();
+    renderCategory(1);
+
+    // -----------------------------
+    // 3) STATE, EVENTS, CALC
+    // -----------------------------
+    const scoreState = {};   // { "1.1.1": 4, ... }
+    const filesState = {};   // { "1.1.1": [File, ...], ... }
+
+    function attachListeners(){
+      // score inputs
+      document.querySelectorAll('.score-input').forEach(inp=>{
+        inp.addEventListener('input', e=>{
+          const max = +inp.getAttribute('max') || 4;
+          let v = parseInt(e.target.value || "0", 10);
+          if(isNaN(v) || v < 0) v = 0;
+          if(v > max) v = max;
+          e.target.value = v;
+          scoreState[inp.dataset.code] = v;
+          recalcProgress();
+        });
+      });
+
+      // file inputs
+      document.querySelectorAll('.upload-area input[type="file"]').forEach(finp=>{
+        finp.addEventListener('change', e=>{
+          const code = finp.dataset.code;
+          filesState[code] = Array.from(finp.files || []);
+          renderEvidenceList(code);
+        });
+      });
+    }
+    attachListeners();
+
+    function renderEvidenceList(code){
+      const listEl = document.getElementById(`ev-${code}`);
+      const arr = filesState[code] || [];
+      listEl.innerHTML = arr.map(f => `<div><i class="fa-regular fa-file"></i> ${f.name} <span class="text-muted">(${Math.ceil(f.size/1024)} KB)</span></div>`).join("");
+    }
+
+    function recalcProgress(){
+      const totalItems = CRITERIA_DATA.reduce((s,c)=> s + c.items.length, 0);
+      const scoredItems = Object.keys(scoreState).filter(k => typeof scoreState[k] === 'number' && scoreState[k] >= 0).length;
+      const sumScore = Object.values(scoreState).reduce((a,b)=> a + (Number.isFinite(b) ? b : 0), 0);
+      const maxScore = CRITERIA_DATA.reduce((s,c)=> s + c.items.reduce((x,i)=> x + (i.max||4), 0), 0);
+
+      document.getElementById("scoredCount").textContent = scoredItems;
+      document.getElementById("totalScore").textContent = sumScore;
+      document.getElementById("maxScore").textContent = maxScore;
+
+      const scorePct = maxScore ? Math.round((sumScore / maxScore) * 100) : 0;
+      document.getElementById("scorePercent").textContent = scorePct;
+
+      const progressPct = Math.round((scoredItems / totalItems) * 100);
+      document.getElementById("progressPercent").textContent = progressPct;
+      document.getElementById("progressBar").style.width = progressPct + "%";
+    }
+
+    // Dummy save/submit (extend as needed)
+    document.getElementById("saveDraftBtn").addEventListener("click", ()=>{
+      document.getElementById("draftBadge").innerHTML = '<i class="fa-solid fa-pen"></i> Draft (บันทึกล่าสุด)';
+    });
+    document.getElementById("submitBtn").addEventListener("click", ()=>{
+      alert("ส่งประเมินเรียบร้อย (ตัวอย่าง) – ระบบสามารถเชื่อมต่อ API/Backend สำหรับบันทึกจริงได้");
+    });
+
+    // -----------------------------
+    // 4) AI Chat (ปรับให้รู้จักรหัสเกณฑ์)
+    // -----------------------------
+    const aiBtn = document.getElementById('aiBtn');
+    const chatWindow = document.getElementById('chatWindow');
+    const closeChat = document.getElementById('closeChat');
+    const chatBody = document.getElementById('chatBody');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    aiBtn.addEventListener('click', ()=> chatWindow.style.display = (chatWindow.style.display === 'flex') ? 'none' : 'flex');
+    closeChat.addEventListener('click', ()=> chatWindow.style.display = 'none');
+
+    function addMessage(role, html){
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble chat-${role}`;
+      bubble.innerHTML = html;
+      chatBody.appendChild(bubble);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function replyByCode(text){
+      const t = text.trim().toLowerCase();
+      // หา item ตามรหัส เช่น "1.4", "1.4.2"
+      let match = null;
+      // ตรงรหัสเต็มก่อน
+      for(const cat of CRITERIA_DATA){
+        for(const it of cat.items){
+          if(t.includes(it.code.toLowerCase())){
+            match = it; break;
+          }
         }
-
-        function addMessage(role, text) {
-            const bubble = document.createElement('div');
-            bubble.className = `chat-bubble chat-${role}`;
-            bubble.innerHTML = text;
-            chatBody.appendChild(bubble);
-            chatBody.scrollTop = chatBody.scrollHeight;
+        if(match) break;
+      }
+      // ถ้าเป็นระดับหมวด.หัวข้อ เช่น "1.4"
+      if(!match){
+        const short = t.match(/(\d)\.(\d)/);
+        if(short){
+          const [_, C, S] = short;
+          const prefix = `${C}.${S}.`;
+          for(const cat of CRITERIA_DATA){
+            for(const it of cat.items){
+              if(it.code.startsWith(prefix)){ match = it; break; }
+            }
+            if(match) break;
+          }
         }
-
-        function addLoading() {
-            const id = 'loading-' + Date.now();
-            const bubble = document.createElement('div');
-            bubble.id = id;
-            bubble.className = 'chat-bubble chat-ai typing-indicator';
-            bubble.innerHTML = '<span></span><span></span><span></span>';
-            chatBody.appendChild(bubble);
-            chatBody.scrollTop = chatBody.scrollHeight;
-            return id;
+      }
+      if(!match){
+        // คีย์เวิร์ดง่ายๆ
+        if(t.includes('นโยบาย')||t.includes('policy')||t.includes('1.1')){
+          return "<strong>1.1 นโยบายสิ่งแวดล้อม</strong><br/>แนะนำแนบ: ประกาศนโยบาย (มีลายเซ็นและวันที่), หลักฐานสื่อสารนโยบาย (บอร์ด/ออนไลน์), แผนประจำปี และเป้าหมาย 6 ด้าน";
         }
-
-        function removeLoading(id) { document.getElementById(id)?.remove(); }
-
-        function getAIResponse(input) {
-            input = input.toLowerCase();
-            if (input.includes('1.1') || input.includes('นโยบาย')) return "เกณฑ์ 1.1 ต้องมีประกาศนโยบายที่ลงนามโดยผู้บริหารครับ";
-            if (input.includes('4.1') || input.includes('ขยะ')) return "เกณฑ์ 4.1 ต้องมีถังขยะแยกสี 4 ประเภท (ทั่วไป, รีไซเคิล, อินทรีย์, อันตราย)";
-            if (input.includes('6.1') || input.includes('จัดซื้อ')) return "เกณฑ์ 6.1 ต้องซื้อสินค้าฉลากเขียวอย่างน้อย 30% ของรายการสั่งซื้อครับ";
-            return "ผมสามารถช่วยอธิบายเกณฑ์หมวด 1-6 ได้ครับ ลองระบุเลขข้อดูนะ";
+        if(t.includes('กฎหมาย')||t.includes('1.4')){
+          return "<strong>1.4 กฎหมายและข้อกำหนด</strong><br/>แนะนำแนบ: ทะเบียนกฎหมายที่เกี่ยวข้อง, แบบฟอร์มประเมินความสอดคล้อง, หลักฐานปฏิบัติตาม";
         }
+        if(t.includes('ghg')||t.includes('คาร์บอน')||t.includes('1.5')){
+          return "<strong>1.5 ข้อมูลก๊าซเรือนกระจก</strong><br/>แนะนำแนบ: ข้อมูลกิจกรรม (ไฟฟ้า/เชื้อเพลิง/น้ำ/กระดาษ/ของเสีย), สูตรคำนวณ EF ล่าสุด, สรุปผลเทียบเป้าหมาย";
+        }
+        if(t.includes('green meeting')||t.includes('ประชุม')||t.includes('3.4')){
+          return "<strong>3.4 Green Meeting</strong><br/>แนะนำแนบ: แนวทางจัดประชุมสีเขียว, ภาพถ่ายการใช้อุปกรณ์ทดแทนโฟม/พลาสติก, ป้ายรณรงค์";
+        }
+        return "ลองระบุ “รหัสข้อ” เช่น 1.4.2 หรือ 5.5.1 เพื่อให้ผมแนะนำหลักฐานให้ตรงเป้าครับ 🙂";
+      }else{
+        return `<strong>${match.code} ${match.name}</strong><br/>หลักฐานแนะนำ: ${match.hint || 'เอกสาร/ภาพถ่าย/บันทึกผลที่เกี่ยวข้อง'}<br/>คะแนนเต็ม: ${match.max || 4}`;
+      }
+    }
 
-        sendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => { if(e.key==='Enter') sendMessage(); });
-    </script>
+    function sendMessage(){
+      const text = chatInput.value.trim();
+      if(!text) return;
+      addMessage('user', text);
+      chatInput.value = '';
+      setTimeout(()=>{
+        addMessage('ai', replyByCode(text));
+      }, 400);
+    }
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') sendMessage(); });
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </script>
+
+  <!-- JS libs -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
